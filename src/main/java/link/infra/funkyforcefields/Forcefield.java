@@ -4,8 +4,10 @@ import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityContext;
-import net.minecraft.item.Items;
+import net.minecraft.entity.ItemEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -23,9 +25,17 @@ public class Forcefield extends Block {
 
 	@Override
 	public VoxelShape getCollisionShape(BlockState state, BlockView view, BlockPos pos, EntityContext context) {
-		if (context.isHolding(Items.ITEM_FRAME)) {
-			return VoxelShapes.empty();
+		Entity ent = context instanceof EntityContextBypasser ? ((EntityContextBypasser) context).getUnderlyingEntity() : null;
+		if (ent != null) {
+			if (ent instanceof ItemEntity) {
+				return VoxelShapes.empty();
+			}
 		}
 		return super.getCollisionShape(state, view, pos, context);
+	}
+
+	@Override
+	public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
+		return ItemStack.EMPTY;
 	}
 }

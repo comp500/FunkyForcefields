@@ -1,27 +1,34 @@
 {
-  "schemaVersion": 1,
-  "id": "funkyforcefields",
-  "version": "${version}",
-  "name": "FunkyForcefields",
-  "description": "forcefields, but funky",
-  "authors": [
-    "anonymous mod for ModFest!!"
-  ],
-  "contact": {
-    "homepage": "https://github.com/comp500/FunkyForcefields",
-    "sources": "https://github.com/comp500/FunkyForcefields"
-  },
-  "license": "CC0-1.0",
-  "icon": "assets/funkyforcefields/icon.png",
-  "environment": "*",
-  "entrypoints": {
-    "main": [
-      "link.infra.funkyforcefields.FunkyForcefields"
-    ]
-  },
-  "depends": {
-    "fabricloader": ">=0.7.8+build.189",
-    "fabric": "*",
-    "minecraft": "~1.15.2"
-  }
+	"schemaVersion": 1,
+	"id": "funkyforcefields",
+	"version": "${version}",
+	"name": "FunkyForcefields",
+	"description": "forcefields, but funky",
+	"authors": [
+		"anonymous mod for ModFest!!"
+	],
+	"contact": {
+		"homepage": "https://github.com/comp500/FunkyForcefields",
+		"sources": "https://github.com/comp500/FunkyForcefields"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/funkyforcefields/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"link.infra.funkyforcefields.FunkyForcefields"
+		],
+		"client": [
+			"link.infra.funkyforcefields.FunkyForcefields"
+		]
+	},
+	"depends": {
+		"fabricloader": ">=0.7.8+build.189",
+		"fabric": "*",
+		"minecraft": "~1.15.2"
+	},
+
+	"mixins": [{
+		"config": "funkyforcefields.mixins.json"
+	}]
 }
