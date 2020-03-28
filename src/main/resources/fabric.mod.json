@@ -16,7 +16,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "link.infra.funkyforcefields.funkyforcefields.FunkyForcefields"
+      "link.infra.funkyforcefields.FunkyForcefields"
     ]
   },
   "depends": {
