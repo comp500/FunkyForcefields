@@ -1,5 +1,6 @@
 package link.infra.funkyforcefields;
 
+import link.infra.funkyforcefields.regions.ForcefieldType;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -19,7 +20,7 @@ import net.minecraft.util.registry.Registry;
 public class FunkyForcefields implements ModInitializer, ClientModInitializer {
 	public static final String MODID = "funkyforcefields";
 
-	public static final Block VERTICAL_FORCEFIELD = new VerticalForcefield();
+	public static final Block VERTICAL_FORCEFIELD = new VerticalForcefield(ForcefieldType.FUNKY_GOO);
 	public static final Block PLASMA_EJECTOR = new PlasmaEjector();
 
 	public static BlockEntityType<PlasmaEjectorBlockEntity> PLASMA_EJECTOR_BLOCK_ENTITY;

@@ -9,12 +9,14 @@ import net.minecraft.world.World;
 public class ForcefieldRegionLine extends ForcefieldRegion {
 	private final BlockPos origPos;
 	private final int length;
-	private final Direction dir;
+	private final Direction dirExtension;
+	private final Direction dirForcefield;
 
-	public ForcefieldRegionLine(BlockPos origPos, int length, Direction dir) {
+	public ForcefieldRegionLine(BlockPos origPos, int length, Direction dirExtension, Direction dirForcefield) {
 		this.origPos = origPos;
 		this.length = length;
-		this.dir = dir;
+		this.dirExtension = dirExtension;
+		this.dirForcefield = dirForcefield;
 	}
 
 	private static boolean bounded(int value, int orig, int length, boolean flipped) {
@@ -27,8 +29,8 @@ public class ForcefieldRegionLine extends ForcefieldRegion {
 
 	@Override
 	public boolean containsCoordinate(BlockPos pos) {
-		boolean flipped = dir.getDirection() == Direction.AxisDirection.NEGATIVE;
-		switch (dir.getAxis()) {
+		boolean flipped = dirExtension.getDirection() == Direction.AxisDirection.NEGATIVE;
+		switch (dirExtension.getAxis()) {
 			case X:
 				return pos.getY() == origPos.getY() && pos.getZ() == origPos.getZ() && bounded(pos.getX(), origPos.getX(), length, flipped);
 			case Y:
@@ -43,7 +45,7 @@ public class ForcefieldRegionLine extends ForcefieldRegion {
 	public void createBlocks(World world) {
 		// TODO: don't just nuke all the things!!
 		for (int i = 1; i < length + 1; i++) {
-			world.setBlockState(origPos.offset(dir, i), FunkyForcefields.VERTICAL_FORCEFIELD.getDefaultState().with(VerticalForcefield.FACING, dir));
+			world.setBlockState(origPos.offset(dirExtension, i), FunkyForcefields.VERTICAL_FORCEFIELD.getDefaultState().with(VerticalForcefield.FACING, dirForcefield));
 		}
 	}
 }

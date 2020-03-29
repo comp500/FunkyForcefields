@@ -6,6 +6,7 @@ import link.infra.funkyforcefields.regions.ForcefieldRegionManager;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.Tickable;
+import net.minecraft.util.math.Direction;
 
 public class PlasmaEjectorBlockEntity extends BlockEntity implements ForcefieldRegionHolder, Tickable {
 	private ForcefieldRegionLine region;
@@ -35,7 +36,16 @@ public class PlasmaEjectorBlockEntity extends BlockEntity implements ForcefieldR
 		if (world != null && !world.isClient) {
 			if (region == null) {
 				BlockState state = world.getBlockState(pos);
-				region = new ForcefieldRegionLine(pos, 10, state.get(PlasmaEjector.FACING));
+				switch (state.get(PlasmaEjector.POINTING)) {
+					case UP:
+						region = new ForcefieldRegionLine(pos, 10, Direction.UP, state.get(PlasmaEjector.FACING));
+						break;
+					case DOWN:
+						region = new ForcefieldRegionLine(pos, 10, Direction.DOWN, state.get(PlasmaEjector.FACING));
+						break;
+					case SIDEWAYS:
+						region = new ForcefieldRegionLine(pos, 10, state.get(PlasmaEjector.FACING), state.get(PlasmaEjector.FACING));
+				}
 				registerRegion(region, world);
 			}
 

@@ -1,6 +1,7 @@
 package link.infra.funkyforcefields;
 
 import link.infra.funkyforcefields.regions.ForcefieldRegionManager;
+import link.infra.funkyforcefields.regions.ForcefieldType;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -21,9 +22,12 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 public class VerticalForcefield extends HorizontalFacingBlock {
-	public VerticalForcefield() {
+	private final ForcefieldType type;
+
+	public VerticalForcefield(ForcefieldType type) {
 		super(FabricBlockSettings.of(Material.BARRIER).nonOpaque().strength(-1.0F, 3600000.0F).dropsNothing().build());
 		setDefaultState(this.stateManager.getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH));
+		this.type = type;
 	}
 
 	@Override
@@ -80,7 +84,6 @@ public class VerticalForcefield extends HorizontalFacingBlock {
 				}
 			}
 		}
-		// TODO: test piston
 		super.neighborUpdate(state, world, pos, block, neighborPos, moved);
 	}
 
