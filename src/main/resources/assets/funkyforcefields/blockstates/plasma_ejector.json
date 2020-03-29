@@ -1,0 +1,8 @@
+{
+	"variants": {
+		"facing=north": { "model": "funkyforcefields:block/plasma_ejector", "x": 90 },
+		"facing=east":  { "model": "funkyforcefields:block/plasma_ejector", "y": 90, "x": 90 },
+		"facing=south": { "model": "funkyforcefields:block/plasma_ejector", "y": 180, "x": 90 },
+		"facing=west":  { "model": "funkyforcefields:block/plasma_ejector", "y": 270, "x": 90 }
+	}
+}
