@@ -7,13 +7,16 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -43,6 +46,14 @@ public class FunkyForcefields implements ModInitializer, ClientModInitializer {
 		Registry.register(Registry.BLOCK, new Identifier(MODID, "plasma_ejector"), PLASMA_EJECTOR);
 		Registry.register(Registry.ITEM, new Identifier(MODID, "plasma_ejector"),
 			new BlockItem(PLASMA_EJECTOR, new Item.Settings().group(ITEM_GROUP)));
+
+		AttackBlockCallback.EVENT.register((playerEntity, world, hand, blockPos, direction) -> {
+			BlockState state = world.getBlockState(blockPos);
+			if (state.getBlock() == VERTICAL_FORCEFIELD) {
+				return ActionResult.FAIL;
+			}
+			return ActionResult.PASS;
+		});
 	}
 
 	@Environment(EnvType.CLIENT)

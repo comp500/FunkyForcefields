@@ -86,19 +86,4 @@ public class VerticalForcefield extends HorizontalFacingBlock {
 		}
 		super.neighborUpdate(state, world, pos, block, neighborPos, moved);
 	}
-
-	@Override
-	public void onBlockRemoved(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-		if (!newState.isAir()) {
-			return;
-		}
-		ForcefieldRegionManager manager = ForcefieldRegionManager.get(world);
-		if (manager != null) {
-			// TODO: check if region matches type
-			if (manager.queryRegion(pos) != null) {
-				// Re place the block !!
-				world.setBlockState(pos, state);
-			}
-		}
-	}
 }
