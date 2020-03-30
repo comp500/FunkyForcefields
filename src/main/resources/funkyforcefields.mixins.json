@@ -6,6 +6,7 @@
 		"EntityContextImplMixin"
 	],
 	"client": [
+		"WorldRendererMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
