@@ -16,7 +16,6 @@ public class ForcefieldRegionLine extends ForcefieldRegion {
 	private final Direction dirExtension;
 	private final Direction dirForcefield;
 
-	// TODO: add horiz forcefield
 	public ForcefieldRegionLine(BlockPos origPos, int length, Direction dirExtension, Direction dirForcefield, ForcefieldFluid type) {
 		super(type);
 		this.origPos = origPos;

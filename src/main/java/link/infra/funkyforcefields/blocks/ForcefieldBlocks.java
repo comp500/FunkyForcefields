@@ -1,6 +1,8 @@
 package link.infra.funkyforcefields.blocks;
 
 import link.infra.funkyforcefields.regions.ForcefieldFluid;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
@@ -21,6 +23,7 @@ public class ForcefieldBlocks {
 		blockGenerators.put(type, gen);
 		for (ForcefieldFluid fluid : registeredFluids) {
 			T block = gen.apply(fluid);
+			initRenderLayerBlock(block);
 			registeredBlocks.getOrDefault(fluid, new HashMap<>()).put(type, block);
 		}
 	}
@@ -31,6 +34,7 @@ public class ForcefieldBlocks {
 		assert typeToBlockMap != null;
 		for (Map.Entry<Class<? extends ForcefieldBlock>, Function<ForcefieldFluid, ? extends ForcefieldBlock>> gen : blockGenerators.entrySet()) {
 			ForcefieldBlock block = gen.getValue().apply(fluid);
+			initRenderLayerBlock(block);
 			typeToBlockMap.put(gen.getKey(), block);
 		}
 	}
@@ -59,5 +63,24 @@ public class ForcefieldBlocks {
 
 	public static ForcefieldBlock getBlock(ForcefieldFluid fluid, Class<? extends ForcefieldBlock> clazz) {
 		return registeredBlocks.get(fluid).get(clazz);
+	}
+
+	private static boolean shouldInitClient = false;
+
+	@Environment(EnvType.CLIENT)
+	public static void initClient() {
+		shouldInitClient = true;
+		for (Map<Class<? extends ForcefieldBlock>, ForcefieldBlock> blocks : registeredBlocks.values()) {
+			for (ForcefieldBlock block : blocks.values()) {
+				block.initRenderLayer();
+			}
+		}
+	}
+
+	@SuppressWarnings("MethodCallSideOnly")
+	private static void initRenderLayerBlock(ForcefieldBlock block) {
+		if (shouldInitClient) {
+			block.initRenderLayer();
+		}
 	}
 }

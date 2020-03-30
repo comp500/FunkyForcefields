@@ -7,13 +7,11 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -25,8 +23,7 @@ import net.minecraft.util.registry.Registry;
 public class FunkyForcefields implements ModInitializer, ClientModInitializer {
 	public static final String MODID = "funkyforcefields";
 
-	// TODO: does this work?
-	public static final Block VERTICAL_FORCEFIELD = new ForcefieldBlockVertical(ForcefieldFluids.WATER);
+	private static Block FUNKY_GOO_ITEMGROUP_ICON;
 	public static final Block PLASMA_EJECTOR_VERTICAL = new PlasmaEjectorVertical();
 	public static final Block PLASMA_EJECTOR_HORIZONTAL = new PlasmaEjectorHorizontal();
 
@@ -34,7 +31,7 @@ public class FunkyForcefields implements ModInitializer, ClientModInitializer {
 
 	public static final ItemGroup ITEM_GROUP = FabricItemGroupBuilder.build(
 		new Identifier(MODID, "main"),
-		() -> new ItemStack(VERTICAL_FORCEFIELD)
+		() -> new ItemStack(FUNKY_GOO_ITEMGROUP_ICON)
 	);
 
 	@Override
@@ -43,6 +40,8 @@ public class FunkyForcefields implements ModInitializer, ClientModInitializer {
 		ForcefieldFluids.register();
 		ForcefieldBlocks.registerStandardBlockTypes();
 
+		// TODO: funky goo?!!
+		FUNKY_GOO_ITEMGROUP_ICON = ForcefieldBlocks.getBlock(ForcefieldFluids.LAVA, ForcefieldBlockVertical.class);
 
 		PLASMA_EJECTOR_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(MODID, "plasma_ejector"),
 			BlockEntityType.Builder.create(PlasmaEjectorBlockEntity::new, PLASMA_EJECTOR_VERTICAL, PLASMA_EJECTOR_HORIZONTAL).build(null));
@@ -66,7 +65,6 @@ public class FunkyForcefields implements ModInitializer, ClientModInitializer {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void onInitializeClient() {
-		// TODO: magically do this on forcefield type registration
-		BlockRenderLayerMap.INSTANCE.putBlock(VERTICAL_FORCEFIELD, RenderLayer.getTranslucent());
+		ForcefieldBlocks.initClient();
 	}
 }
