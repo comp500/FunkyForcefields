@@ -1,7 +1,8 @@
-package link.infra.funkyforcefields;
+package link.infra.funkyforcefields.blocks;
 
 import link.infra.funkyforcefields.regions.ForcefieldRegion;
 import link.infra.funkyforcefields.regions.ForcefieldRegionManager;
+import link.infra.funkyforcefields.util.CursedPointingDirection;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;

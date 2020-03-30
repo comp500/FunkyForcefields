@@ -1,5 +1,8 @@
 package link.infra.funkyforcefields;
 
+import link.infra.funkyforcefields.blocks.PlasmaEjector;
+import link.infra.funkyforcefields.blocks.PlasmaEjectorBlockEntity;
+import link.infra.funkyforcefields.blocks.VerticalForcefield;
 import link.infra.funkyforcefields.regions.ForcefieldType;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;

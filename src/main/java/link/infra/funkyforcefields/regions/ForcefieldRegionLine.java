@@ -2,7 +2,7 @@ package link.infra.funkyforcefields.regions;
 
 import jdk.internal.jline.internal.Nullable;
 import link.infra.funkyforcefields.FunkyForcefields;
-import link.infra.funkyforcefields.VerticalForcefield;
+import link.infra.funkyforcefields.blocks.VerticalForcefield;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;

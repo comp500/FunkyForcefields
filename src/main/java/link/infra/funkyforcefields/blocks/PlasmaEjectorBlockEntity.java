@@ -1,5 +1,6 @@
-package link.infra.funkyforcefields;
+package link.infra.funkyforcefields.blocks;
 
+import link.infra.funkyforcefields.FunkyForcefields;
 import link.infra.funkyforcefields.regions.ForcefieldRegionHolder;
 import link.infra.funkyforcefields.regions.ForcefieldRegionLine;
 import link.infra.funkyforcefields.regions.ForcefieldRegionManager;

@@ -1,6 +1,6 @@
 package link.infra.funkyforcefields.mixin;
 
-import link.infra.funkyforcefields.EntityContextBypasser;
+import link.infra.funkyforcefields.util.EntityContextBypasser;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityContextImpl;
 import org.spongepowered.asm.mixin.Mixin;

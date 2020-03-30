@@ -1,4 +1,4 @@
-package link.infra.funkyforcefields;
+package link.infra.funkyforcefields.util;
 
 import net.minecraft.entity.Entity;
 
