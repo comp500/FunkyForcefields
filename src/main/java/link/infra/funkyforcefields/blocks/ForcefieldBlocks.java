@@ -41,12 +41,20 @@ public class ForcefieldBlocks {
 
 	public static void registerStandardBlockTypes() {
 		registerBlockType(fluid -> {
-			VerticalForcefieldBlock vfb = new VerticalForcefieldBlock(fluid);
+			ForcefieldBlockVertical vfb = new ForcefieldBlockVertical(fluid);
 			Registry.register(Registry.BLOCK, appendIdentifier(fluid.getBaseIdentifier(), "_vertical"), vfb);
 			Registry.register(Registry.ITEM, appendIdentifier(fluid.getBaseIdentifier(), "_vertical"),
 				new BlockItem(vfb, new Item.Settings()));
 			return vfb;
-		}, VerticalForcefieldBlock.class);
+		}, ForcefieldBlockVertical.class);
+
+		registerBlockType(fluid -> {
+			ForcefieldBlockHorizontal vfb = new ForcefieldBlockHorizontal(fluid);
+			Registry.register(Registry.BLOCK, appendIdentifier(fluid.getBaseIdentifier(), "_horizontal"), vfb);
+			Registry.register(Registry.ITEM, appendIdentifier(fluid.getBaseIdentifier(), "_horizontal"),
+				new BlockItem(vfb, new Item.Settings()));
+			return vfb;
+		}, ForcefieldBlockHorizontal.class);
 	}
 
 	public static ForcefieldBlock getBlock(ForcefieldFluid fluid, Class<? extends ForcefieldBlock> clazz) {

@@ -2,8 +2,9 @@ package link.infra.funkyforcefields.regions;
 
 import jdk.internal.jline.internal.Nullable;
 import link.infra.funkyforcefields.blocks.ForcefieldBlock;
+import link.infra.funkyforcefields.blocks.ForcefieldBlockHorizontal;
+import link.infra.funkyforcefields.blocks.ForcefieldBlockVertical;
 import link.infra.funkyforcefields.blocks.ForcefieldBlocks;
-import link.infra.funkyforcefields.blocks.VerticalForcefieldBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -46,6 +47,14 @@ public class ForcefieldRegionLine extends ForcefieldRegion {
 		return false;
 	}
 
+	private BlockState getTheBlockStateOfThisForceFieldRegionLine() {
+		if (dirForcefield == Direction.UP) {
+			return ForcefieldBlocks.getBlock(forcefieldFluid, ForcefieldBlockHorizontal.class).getDefaultState();
+		} else {
+			return ForcefieldBlocks.getBlock(forcefieldFluid, ForcefieldBlockVertical.class).getDefaultState().with(ForcefieldBlockVertical.FACING, dirForcefield);
+		}
+	}
+
 	private boolean placingBlocks = false;
 
 	@Override
@@ -57,19 +66,23 @@ public class ForcefieldRegionLine extends ForcefieldRegion {
 			if (!world.getBlockState(newPos).isAir()) {
 				continue;
 			}
-			world.setBlockState(newPos, ForcefieldBlocks.getBlock(forcefieldFluid, VerticalForcefieldBlock.class).getDefaultState().with(VerticalForcefieldBlock.FACING, dirForcefield));
+			world.setBlockState(newPos, getTheBlockStateOfThisForceFieldRegionLine());
 		}
 		placingBlocks = false;
 	}
 
 	@Override
 	public boolean isValidBlock(@Nullable BlockState state) {
-		return state != null && state.getBlock() instanceof VerticalForcefieldBlock && state.get(VerticalForcefieldBlock.FACING) == dirForcefield;
+		if (dirForcefield == Direction.UP) {
+			return state != null && state.getBlock() instanceof ForcefieldBlockHorizontal;
+		} else {
+			return state != null && state.getBlock() instanceof ForcefieldBlockVertical && state.get(ForcefieldBlockVertical.FACING) == dirForcefield;
+		}
 	}
 
 	@Override
 	public void revalidateBlock(World world, BlockPos pos) {
-		world.setBlockState(pos, ForcefieldBlocks.getBlock(forcefieldFluid, VerticalForcefieldBlock.class).getDefaultState().with(VerticalForcefieldBlock.FACING, dirForcefield));
+		world.setBlockState(pos, getTheBlockStateOfThisForceFieldRegionLine());
 	}
 
 	@Override

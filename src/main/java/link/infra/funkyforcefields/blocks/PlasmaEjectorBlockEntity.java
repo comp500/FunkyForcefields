@@ -29,7 +29,9 @@ public class PlasmaEjectorBlockEntity extends BlockEntity implements ForcefieldR
 			ForcefieldRegionManager manager = ForcefieldRegionManager.get(getWorld());
 			if (manager != null) {
 				manager.removeRegion(this);
-				region.cleanup(getWorld(), manager);
+				if (region != null) {
+					region.cleanup(getWorld(), manager);
+				}
 			}
 		}
 	}
@@ -39,15 +41,20 @@ public class PlasmaEjectorBlockEntity extends BlockEntity implements ForcefieldR
 		if (world != null && !world.isClient) {
 			if (region == null) {
 				BlockState state = world.getBlockState(pos);
-				switch (state.get(PlasmaEjector.POINTING)) {
-					case UP:
-						region = new ForcefieldRegionLine(pos, 10, Direction.UP, state.get(PlasmaEjector.FACING), ForcefieldFluids.WATER);
-						break;
-					case DOWN:
-						region = new ForcefieldRegionLine(pos, 10, Direction.DOWN, state.get(PlasmaEjector.FACING), ForcefieldFluids.WATER);
-						break;
-					case SIDEWAYS:
-						region = new ForcefieldRegionLine(pos, 10, state.get(PlasmaEjector.FACING), state.get(PlasmaEjector.FACING), ForcefieldFluids.WATER);
+				if (state.getBlock() instanceof PlasmaEjectorVertical) {
+					// TODO: fluid system, length
+					switch (state.get(PlasmaEjectorVertical.POINTING)) {
+						case UP:
+							region = new ForcefieldRegionLine(pos, 10, Direction.UP, state.get(PlasmaEjectorVertical.FACING), ForcefieldFluids.WATER);
+							break;
+						case DOWN:
+							region = new ForcefieldRegionLine(pos, 10, Direction.DOWN, state.get(PlasmaEjectorVertical.FACING), ForcefieldFluids.WATER);
+							break;
+						case SIDEWAYS:
+							region = new ForcefieldRegionLine(pos, 10, state.get(PlasmaEjectorVertical.FACING), state.get(PlasmaEjectorVertical.FACING), ForcefieldFluids.WATER);
+					}
+				} else {
+					region = new ForcefieldRegionLine(pos, 10, state.get(PlasmaEjectorHorizontal.FACING), Direction.UP, ForcefieldFluids.WATER);
 				}
 				registerRegion(region, world);
 			}

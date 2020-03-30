@@ -23,10 +23,10 @@ import net.minecraft.world.World;
 
 import java.util.stream.Stream;
 
-public class PlasmaEjector extends HorizontalFacingBlock implements BlockEntityProvider {
+public class PlasmaEjectorVertical extends HorizontalFacingBlock implements BlockEntityProvider {
 	public static final EnumProperty<CursedPointingDirection> POINTING = EnumProperty.of("pointing", CursedPointingDirection.class);
 
-	public PlasmaEjector() {
+	public PlasmaEjectorVertical() {
 		super(FabricBlockSettings.of(Material.BARRIER).build());
 		setDefaultState(this.stateManager.getDefaultState()
 			.with(Properties.HORIZONTAL_FACING, Direction.NORTH)

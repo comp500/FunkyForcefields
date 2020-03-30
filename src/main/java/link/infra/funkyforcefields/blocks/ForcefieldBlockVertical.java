@@ -27,11 +27,11 @@ import net.minecraft.world.World;
 
 import java.util.Random;
 
-public class VerticalForcefieldBlock extends ForcefieldBlock {
+public class ForcefieldBlockVertical extends ForcefieldBlock {
 	public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 	private final ForcefieldFluid fluid;
 
-	public VerticalForcefieldBlock(ForcefieldFluid fluid) {
+	public ForcefieldBlockVertical(ForcefieldFluid fluid) {
 		super(FabricBlockSettings.of(Material.BARRIER).nonOpaque().strength(-1.0F, 3600000.0F).dropsNothing().build());
 		setDefaultState(this.stateManager.getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH));
 		this.fluid = fluid;

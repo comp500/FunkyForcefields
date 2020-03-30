@@ -1,3 +1,5 @@
 {
-	"itemGroup.funkyforcefields.main": "Funky Forcefields"
+	"itemGroup.funkyforcefields.main": "Funky Forcefields",
+	"block.funkyforcefields.plasma_ejector_vertical": "Plasma Ejector (Vertical)",
+	"block.funkyforcefields.plasma_ejector_horizontal": "Plasma Ejector (Horizontal)"
 }

@@ -25,8 +25,10 @@ import net.minecraft.util.registry.Registry;
 public class FunkyForcefields implements ModInitializer, ClientModInitializer {
 	public static final String MODID = "funkyforcefields";
 
-	public static final Block VERTICAL_FORCEFIELD = new VerticalForcefieldBlock(ForcefieldFluids.WATER);
-	public static final Block PLASMA_EJECTOR = new PlasmaEjector();
+	// TODO: does this work?
+	public static final Block VERTICAL_FORCEFIELD = new ForcefieldBlockVertical(ForcefieldFluids.WATER);
+	public static final Block PLASMA_EJECTOR_VERTICAL = new PlasmaEjectorVertical();
+	public static final Block PLASMA_EJECTOR_HORIZONTAL = new PlasmaEjectorHorizontal();
 
 	public static BlockEntityType<PlasmaEjectorBlockEntity> PLASMA_EJECTOR_BLOCK_ENTITY;
 
@@ -39,15 +41,18 @@ public class FunkyForcefields implements ModInitializer, ClientModInitializer {
 	public void onInitialize() {
 		Registry.register(Registry.REGISTRIES, new Identifier(MODID, "forcefield_type"), ForcefieldFluid.REGISTRY);
 		ForcefieldFluids.register();
-
-		PLASMA_EJECTOR_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(MODID, "plasma_ejector"),
-			BlockEntityType.Builder.create(PlasmaEjectorBlockEntity::new, PLASMA_EJECTOR).build(null));
-
 		ForcefieldBlocks.registerStandardBlockTypes();
 
-		Registry.register(Registry.BLOCK, new Identifier(MODID, "plasma_ejector"), PLASMA_EJECTOR);
-		Registry.register(Registry.ITEM, new Identifier(MODID, "plasma_ejector"),
-			new BlockItem(PLASMA_EJECTOR, new Item.Settings().group(ITEM_GROUP)));
+
+		PLASMA_EJECTOR_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(MODID, "plasma_ejector"),
+			BlockEntityType.Builder.create(PlasmaEjectorBlockEntity::new, PLASMA_EJECTOR_VERTICAL, PLASMA_EJECTOR_HORIZONTAL).build(null));
+
+		Registry.register(Registry.BLOCK, new Identifier(MODID, "plasma_ejector_vertical"), PLASMA_EJECTOR_VERTICAL);
+		Registry.register(Registry.ITEM, new Identifier(MODID, "plasma_ejector_vertical"),
+			new BlockItem(PLASMA_EJECTOR_VERTICAL, new Item.Settings().group(ITEM_GROUP)));
+		Registry.register(Registry.BLOCK, new Identifier(MODID, "plasma_ejector_horizontal"), PLASMA_EJECTOR_HORIZONTAL);
+		Registry.register(Registry.ITEM, new Identifier(MODID, "plasma_ejector_horizontal"),
+			new BlockItem(PLASMA_EJECTOR_HORIZONTAL, new Item.Settings().group(ITEM_GROUP)));
 
 		AttackBlockCallback.EVENT.register((playerEntity, world, hand, blockPos, direction) -> {
 			BlockState state = world.getBlockState(blockPos);
