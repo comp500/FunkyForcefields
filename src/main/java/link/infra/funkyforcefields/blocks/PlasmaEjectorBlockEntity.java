@@ -1,6 +1,7 @@
 package link.infra.funkyforcefields.blocks;
 
 import link.infra.funkyforcefields.FunkyForcefields;
+import link.infra.funkyforcefields.regions.ForcefieldFluids;
 import link.infra.funkyforcefields.regions.ForcefieldRegionHolder;
 import link.infra.funkyforcefields.regions.ForcefieldRegionLine;
 import link.infra.funkyforcefields.regions.ForcefieldRegionManager;
@@ -40,13 +41,13 @@ public class PlasmaEjectorBlockEntity extends BlockEntity implements ForcefieldR
 				BlockState state = world.getBlockState(pos);
 				switch (state.get(PlasmaEjector.POINTING)) {
 					case UP:
-						region = new ForcefieldRegionLine(pos, 10, Direction.UP, state.get(PlasmaEjector.FACING));
+						region = new ForcefieldRegionLine(pos, 10, Direction.UP, state.get(PlasmaEjector.FACING), ForcefieldFluids.WATER);
 						break;
 					case DOWN:
-						region = new ForcefieldRegionLine(pos, 10, Direction.DOWN, state.get(PlasmaEjector.FACING));
+						region = new ForcefieldRegionLine(pos, 10, Direction.DOWN, state.get(PlasmaEjector.FACING), ForcefieldFluids.WATER);
 						break;
 					case SIDEWAYS:
-						region = new ForcefieldRegionLine(pos, 10, state.get(PlasmaEjector.FACING), state.get(PlasmaEjector.FACING));
+						region = new ForcefieldRegionLine(pos, 10, state.get(PlasmaEjector.FACING), state.get(PlasmaEjector.FACING), ForcefieldFluids.WATER);
 				}
 				registerRegion(region, world);
 			}

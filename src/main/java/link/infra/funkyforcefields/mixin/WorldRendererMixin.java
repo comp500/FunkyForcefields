@@ -1,6 +1,6 @@
 package link.infra.funkyforcefields.mixin;
 
-import link.infra.funkyforcefields.FunkyForcefields;
+import link.infra.funkyforcefields.blocks.ForcefieldBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.WorldRenderer;
@@ -17,7 +17,7 @@ public class WorldRendererMixin {
 	// Remove block outline for forcefields, as getOutlineShape affects raytracing
 	@Inject(at = @At("HEAD"), method = "drawBlockOutline(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumer;Lnet/minecraft/entity/Entity;DDDLnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;)V", cancellable = true)
 	private void onDrawBlockOutline(MatrixStack matrixStack, VertexConsumer vertexConsumer, Entity entity, double d, double e, double f, BlockPos blockPos, BlockState blockState, CallbackInfo ci) {
-		if (blockState.getBlock().equals(FunkyForcefields.VERTICAL_FORCEFIELD)) {
+		if (blockState.getBlock() instanceof ForcefieldBlock) {
 			ci.cancel();
 		}
 	}

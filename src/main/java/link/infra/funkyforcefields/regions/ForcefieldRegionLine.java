@@ -1,8 +1,9 @@
 package link.infra.funkyforcefields.regions;
 
 import jdk.internal.jline.internal.Nullable;
-import link.infra.funkyforcefields.FunkyForcefields;
-import link.infra.funkyforcefields.blocks.VerticalForcefield;
+import link.infra.funkyforcefields.blocks.ForcefieldBlock;
+import link.infra.funkyforcefields.blocks.ForcefieldBlocks;
+import link.infra.funkyforcefields.blocks.VerticalForcefieldBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -14,8 +15,9 @@ public class ForcefieldRegionLine extends ForcefieldRegion {
 	private final Direction dirExtension;
 	private final Direction dirForcefield;
 
-	// TODO: add forcefield type
-	public ForcefieldRegionLine(BlockPos origPos, int length, Direction dirExtension, Direction dirForcefield) {
+	// TODO: add horiz forcefield
+	public ForcefieldRegionLine(BlockPos origPos, int length, Direction dirExtension, Direction dirForcefield, ForcefieldFluid type) {
+		super(type);
 		this.origPos = origPos;
 		this.length = length;
 		this.dirExtension = dirExtension;
@@ -55,19 +57,19 @@ public class ForcefieldRegionLine extends ForcefieldRegion {
 			if (!world.getBlockState(newPos).isAir()) {
 				continue;
 			}
-			world.setBlockState(newPos, FunkyForcefields.VERTICAL_FORCEFIELD.getDefaultState().with(VerticalForcefield.FACING, dirForcefield));
+			world.setBlockState(newPos, ForcefieldBlocks.getBlock(forcefieldFluid, VerticalForcefieldBlock.class).getDefaultState().with(VerticalForcefieldBlock.FACING, dirForcefield));
 		}
 		placingBlocks = false;
 	}
 
 	@Override
 	public boolean isValidBlock(@Nullable BlockState state) {
-		return state != null && state.getBlock() == FunkyForcefields.VERTICAL_FORCEFIELD && state.get(VerticalForcefield.FACING) == dirForcefield;
+		return state != null && state.getBlock() instanceof VerticalForcefieldBlock && state.get(VerticalForcefieldBlock.FACING) == dirForcefield;
 	}
 
 	@Override
 	public void revalidateBlock(World world, BlockPos pos) {
-		world.setBlockState(pos, FunkyForcefields.VERTICAL_FORCEFIELD.getDefaultState().with(VerticalForcefield.FACING, dirForcefield));
+		world.setBlockState(pos, ForcefieldBlocks.getBlock(forcefieldFluid, VerticalForcefieldBlock.class).getDefaultState().with(VerticalForcefieldBlock.FACING, dirForcefield));
 	}
 
 	@Override
@@ -75,8 +77,7 @@ public class ForcefieldRegionLine extends ForcefieldRegion {
 		for (int i = 1; i < length + 1; i++) {
 			BlockPos newPos = origPos.offset(dirExtension, i);
 			BlockState state = world.getBlockState(newPos);
-			// TODO: is forcefield function? or interface?
-			if (state.getBlock() == FunkyForcefields.VERTICAL_FORCEFIELD) {
+			if (state.getBlock() instanceof ForcefieldBlock) {
 				ForcefieldRegion region = manager.queryRegion(newPos);
 				if (region == null) {
 					world.removeBlock(newPos, false);

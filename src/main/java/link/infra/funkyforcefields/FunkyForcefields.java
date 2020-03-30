@@ -1,9 +1,8 @@
 package link.infra.funkyforcefields;
 
-import link.infra.funkyforcefields.blocks.PlasmaEjector;
-import link.infra.funkyforcefields.blocks.PlasmaEjectorBlockEntity;
-import link.infra.funkyforcefields.blocks.VerticalForcefield;
-import link.infra.funkyforcefields.regions.ForcefieldType;
+import link.infra.funkyforcefields.blocks.*;
+import link.infra.funkyforcefields.regions.ForcefieldFluid;
+import link.infra.funkyforcefields.regions.ForcefieldFluids;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -26,7 +25,7 @@ import net.minecraft.util.registry.Registry;
 public class FunkyForcefields implements ModInitializer, ClientModInitializer {
 	public static final String MODID = "funkyforcefields";
 
-	public static final Block VERTICAL_FORCEFIELD = new VerticalForcefield(ForcefieldType.FUNKY_GOO);
+	public static final Block VERTICAL_FORCEFIELD = new VerticalForcefieldBlock(ForcefieldFluids.WATER);
 	public static final Block PLASMA_EJECTOR = new PlasmaEjector();
 
 	public static BlockEntityType<PlasmaEjectorBlockEntity> PLASMA_EJECTOR_BLOCK_ENTITY;
@@ -38,13 +37,13 @@ public class FunkyForcefields implements ModInitializer, ClientModInitializer {
 
 	@Override
 	public void onInitialize() {
-		PLASMA_EJECTOR_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MODID + ":plasma_ejector",
+		Registry.register(Registry.REGISTRIES, new Identifier(MODID, "forcefield_type"), ForcefieldFluid.REGISTRY);
+		ForcefieldFluids.register();
+
+		PLASMA_EJECTOR_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(MODID, "plasma_ejector"),
 			BlockEntityType.Builder.create(PlasmaEjectorBlockEntity::new, PLASMA_EJECTOR).build(null));
 
-		// TODO: change identifier
-		Registry.register(Registry.BLOCK, new Identifier(MODID, "forcefield"), VERTICAL_FORCEFIELD);
-		Registry.register(Registry.ITEM, new Identifier(MODID, "forcefield"),
-			new BlockItem(VERTICAL_FORCEFIELD, new Item.Settings()));
+		ForcefieldBlocks.registerStandardBlockTypes();
 
 		Registry.register(Registry.BLOCK, new Identifier(MODID, "plasma_ejector"), PLASMA_EJECTOR);
 		Registry.register(Registry.ITEM, new Identifier(MODID, "plasma_ejector"),
@@ -52,7 +51,7 @@ public class FunkyForcefields implements ModInitializer, ClientModInitializer {
 
 		AttackBlockCallback.EVENT.register((playerEntity, world, hand, blockPos, direction) -> {
 			BlockState state = world.getBlockState(blockPos);
-			if (state.getBlock() == VERTICAL_FORCEFIELD) {
+			if (state.getBlock() instanceof ForcefieldBlock) {
 				return ActionResult.FAIL;
 			}
 			return ActionResult.PASS;
@@ -62,6 +61,7 @@ public class FunkyForcefields implements ModInitializer, ClientModInitializer {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void onInitializeClient() {
+		// TODO: magically do this on forcefield type registration
 		BlockRenderLayerMap.INSTANCE.putBlock(VERTICAL_FORCEFIELD, RenderLayer.getTranslucent());
 	}
 }

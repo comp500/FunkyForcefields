@@ -1,21 +1,23 @@
 package link.infra.funkyforcefields.blocks;
 
+import link.infra.funkyforcefields.regions.ForcefieldFluid;
 import link.infra.funkyforcefields.regions.ForcefieldRegion;
 import link.infra.funkyforcefields.regions.ForcefieldRegionManager;
-import link.infra.funkyforcefields.regions.ForcefieldType;
 import link.infra.funkyforcefields.util.EntityContextBypasser;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalFacingBlock;
 import net.minecraft.block.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityContext;
-import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
+import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.BlockMirror;
+import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -23,13 +25,26 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
-public class VerticalForcefield extends HorizontalFacingBlock {
-	private final ForcefieldType type;
+import java.util.Random;
 
-	public VerticalForcefield(ForcefieldType type) {
+public class VerticalForcefieldBlock extends ForcefieldBlock {
+	public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
+	private final ForcefieldFluid fluid;
+
+	public VerticalForcefieldBlock(ForcefieldFluid fluid) {
 		super(FabricBlockSettings.of(Material.BARRIER).nonOpaque().strength(-1.0F, 3600000.0F).dropsNothing().build());
 		setDefaultState(this.stateManager.getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH));
-		this.type = type;
+		this.fluid = fluid;
+	}
+
+	@Override
+	public BlockState rotate(BlockState state, BlockRotation rotation) {
+		return state.with(FACING, rotation.rotate(state.get(FACING)));
+	}
+
+	@Override
+	public BlockState mirror(BlockState state, BlockMirror mirror) {
+		return state.rotate(mirror.getRotation(state.get(FACING)));
 	}
 
 	@Override
@@ -63,11 +78,26 @@ public class VerticalForcefield extends HorizontalFacingBlock {
 	public VoxelShape getCollisionShape(BlockState state, BlockView view, BlockPos pos, EntityContext context) {
 		Entity ent = context instanceof EntityContextBypasser ? ((EntityContextBypasser) context).getUnderlyingEntity() : null;
 		if (ent != null) {
-			if (ent instanceof ItemEntity) {
+			if (fluid.allowsEntity(ent)) {
 				return VoxelShapes.empty();
 			}
 		}
 		return super.getCollisionShape(state, view, pos, context);
+	}
+
+	@Override
+	public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
+		fluid.applyCollisionEffect(world, pos, entity);
+	}
+
+	@Override
+	public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
+		fluid.displayTick(world, pos, random, getOutlineShape(state, world, pos, EntityContext.absent()));
+	}
+
+	@Override
+	public BlockRenderType getRenderType(BlockState state) {
+		return fluid.hasModel() ? super.getRenderType(state) : BlockRenderType.INVISIBLE;
 	}
 
 	@Override
@@ -97,5 +127,10 @@ public class VerticalForcefield extends HorizontalFacingBlock {
 			}
 		}
 		super.neighborUpdate(state, world, pos, block, neighborPos, moved);
+	}
+
+	@Override
+	public ForcefieldFluid getFluid() {
+		return fluid;
 	}
 }
