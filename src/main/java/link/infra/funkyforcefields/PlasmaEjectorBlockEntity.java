@@ -27,6 +27,7 @@ public class PlasmaEjectorBlockEntity extends BlockEntity implements ForcefieldR
 			ForcefieldRegionManager manager = ForcefieldRegionManager.get(getWorld());
 			if (manager != null) {
 				manager.removeRegion(this);
+				region.cleanup(getWorld(), manager);
 			}
 		}
 	}
@@ -50,7 +51,7 @@ public class PlasmaEjectorBlockEntity extends BlockEntity implements ForcefieldR
 			}
 
 			if (queueBlockPlace) {
-				region.createBlocks(world);
+				region.placeBlocks(world);
 				queueBlockPlace = false;
 			}
 		}

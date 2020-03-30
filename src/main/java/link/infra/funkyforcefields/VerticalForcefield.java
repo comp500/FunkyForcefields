@@ -1,5 +1,6 @@
 package link.infra.funkyforcefields;
 
+import link.infra.funkyforcefields.regions.ForcefieldRegion;
 import link.infra.funkyforcefields.regions.ForcefieldRegionManager;
 import link.infra.funkyforcefields.regions.ForcefieldType;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
@@ -78,9 +79,19 @@ public class VerticalForcefield extends HorizontalFacingBlock {
 		if (!world.isClient) {
 			ForcefieldRegionManager manager = ForcefieldRegionManager.get(world);
 			if (manager != null) {
-				// TODO: check if region matches type
-				if (manager.queryRegion(pos) == null) {
+				ForcefieldRegion reg = manager.queryRegion(pos);
+				if (reg == null) {
 					world.removeBlock(pos, false);
+				} else {
+					if (!reg.isValidBlock(state)) {
+						reg.revalidateBlock(world, pos);
+					}
+					if (neighborPos != null && reg.containsCoordinate(neighborPos)) {
+						BlockState bs = world.getBlockState(neighborPos);
+						if (bs.isAir()) {
+							reg.placeBlocks(world);
+						}
+					}
 				}
 			}
 		}

@@ -1,5 +1,7 @@
 package link.infra.funkyforcefields;
 
+import link.infra.funkyforcefields.regions.ForcefieldRegion;
+import link.infra.funkyforcefields.regions.ForcefieldRegionManager;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -116,7 +118,6 @@ public class PlasmaEjector extends HorizontalFacingBlock implements BlockEntityP
 	@Override
 	public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, EntityContext context) {
 		Direction dir = state.get(FACING);
-		// TODO: yes
 		switch (state.get(POINTING)) {
 			case UP:
 				switch (dir) {
@@ -177,5 +178,21 @@ public class PlasmaEjector extends HorizontalFacingBlock implements BlockEntityP
 		if (be instanceof PlasmaEjectorBlockEntity) {
 			((PlasmaEjectorBlockEntity) be).placeBlocks();
 		}
+	}
+
+	@Override
+	public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos neighborPos, boolean moved) {
+		if (!world.isClient) {
+			ForcefieldRegionManager manager = ForcefieldRegionManager.get(world);
+			if (manager != null && neighborPos != null) {
+				ForcefieldRegion reg = manager.queryRegion(neighborPos);
+				if (reg != null) {
+					if (world.getBlockState(neighborPos).isAir()) {
+						reg.placeBlocks(world);
+					}
+				}
+			}
+		}
+		super.neighborUpdate(state, world, pos, block, neighborPos, moved);
 	}
 }

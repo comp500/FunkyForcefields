@@ -1,7 +1,9 @@
 package link.infra.funkyforcefields.regions;
 
+import jdk.internal.jline.internal.Nullable;
 import link.infra.funkyforcefields.FunkyForcefields;
 import link.infra.funkyforcefields.VerticalForcefield;
+import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -12,6 +14,7 @@ public class ForcefieldRegionLine extends ForcefieldRegion {
 	private final Direction dirExtension;
 	private final Direction dirForcefield;
 
+	// TODO: add forcefield type
 	public ForcefieldRegionLine(BlockPos origPos, int length, Direction dirExtension, Direction dirForcefield) {
 		this.origPos = origPos;
 		this.length = length;
@@ -41,11 +44,46 @@ public class ForcefieldRegionLine extends ForcefieldRegion {
 		return false;
 	}
 
+	private boolean placingBlocks = false;
+
 	@Override
-	public void createBlocks(World world) {
-		// TODO: don't just nuke all the things!!
+	public void placeBlocks(World world) {
+		if (placingBlocks) return;
+		placingBlocks = true;
 		for (int i = 1; i < length + 1; i++) {
-			world.setBlockState(origPos.offset(dirExtension, i), FunkyForcefields.VERTICAL_FORCEFIELD.getDefaultState().with(VerticalForcefield.FACING, dirForcefield));
+			BlockPos newPos = origPos.offset(dirExtension, i);
+			if (!world.getBlockState(newPos).isAir()) {
+				continue;
+			}
+			world.setBlockState(newPos, FunkyForcefields.VERTICAL_FORCEFIELD.getDefaultState().with(VerticalForcefield.FACING, dirForcefield));
+		}
+		placingBlocks = false;
+	}
+
+	@Override
+	public boolean isValidBlock(@Nullable BlockState state) {
+		return state != null && state.getBlock() == FunkyForcefields.VERTICAL_FORCEFIELD && state.get(VerticalForcefield.FACING) == dirForcefield;
+	}
+
+	@Override
+	public void revalidateBlock(World world, BlockPos pos) {
+		world.setBlockState(pos, FunkyForcefields.VERTICAL_FORCEFIELD.getDefaultState().with(VerticalForcefield.FACING, dirForcefield));
+	}
+
+	@Override
+	public void cleanup(World world, ForcefieldRegionManager manager) {
+		for (int i = 1; i < length + 1; i++) {
+			BlockPos newPos = origPos.offset(dirExtension, i);
+			BlockState state = world.getBlockState(newPos);
+			// TODO: is forcefield function? or interface?
+			if (state.getBlock() == FunkyForcefields.VERTICAL_FORCEFIELD) {
+				ForcefieldRegion region = manager.queryRegion(newPos);
+				if (region == null) {
+					world.removeBlock(newPos, false);
+				} else if (!region.isValidBlock(state)) {
+					region.revalidateBlock(world, newPos);
+				}
+			}
 		}
 	}
 }
