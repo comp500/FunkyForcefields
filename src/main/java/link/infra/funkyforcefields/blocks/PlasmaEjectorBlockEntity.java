@@ -45,16 +45,16 @@ public class PlasmaEjectorBlockEntity extends BlockEntity implements ForcefieldR
 					// TODO: fluid system, length
 					switch (state.get(PlasmaEjectorVertical.POINTING)) {
 						case UP:
-							region = new ForcefieldRegionLine(pos, 10, Direction.UP, state.get(PlasmaEjectorVertical.FACING), ForcefieldFluids.WATER);
+							region = new ForcefieldRegionLine(pos, 10, Direction.UP, state.get(PlasmaEjectorVertical.FACING), ForcefieldFluids.GLASS);
 							break;
 						case DOWN:
-							region = new ForcefieldRegionLine(pos, 10, Direction.DOWN, state.get(PlasmaEjectorVertical.FACING), ForcefieldFluids.WATER);
+							region = new ForcefieldRegionLine(pos, 10, Direction.DOWN, state.get(PlasmaEjectorVertical.FACING), ForcefieldFluids.GLASS);
 							break;
 						case SIDEWAYS:
-							region = new ForcefieldRegionLine(pos, 10, state.get(PlasmaEjectorVertical.FACING), state.get(PlasmaEjectorVertical.FACING), ForcefieldFluids.WATER);
+							region = new ForcefieldRegionLine(pos, 10, state.get(PlasmaEjectorVertical.FACING), state.get(PlasmaEjectorVertical.FACING), ForcefieldFluids.GLASS);
 					}
 				} else {
-					region = new ForcefieldRegionLine(pos, 10, state.get(PlasmaEjectorHorizontal.FACING), Direction.UP, ForcefieldFluids.WATER);
+					region = new ForcefieldRegionLine(pos, 10, state.get(PlasmaEjectorHorizontal.FACING), Direction.UP, ForcefieldFluids.GLASS);
 				}
 				registerRegion(region, world);
 			}

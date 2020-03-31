@@ -2,7 +2,7 @@
 	"schemaVersion": 1,
 	"id": "funkyforcefields",
 	"version": "${version}",
-	"name": "FunkyForcefields",
+	"name": "Funky Forcefields",
 	"description": "forcefields, but funky",
 	"authors": [
 		"anonymous mod for ModFest!!"

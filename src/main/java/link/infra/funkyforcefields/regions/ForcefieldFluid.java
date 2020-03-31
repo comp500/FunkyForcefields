@@ -1,6 +1,9 @@
 package link.infra.funkyforcefields.regions;
 
 import link.infra.funkyforcefields.blocks.ForcefieldBlocks;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -42,8 +45,9 @@ public interface ForcefieldFluid {
 	default boolean hasModel() {
 		return true;
 	}
-	default boolean isTranslucent() {
-		return true;
+	@Environment(EnvType.CLIENT)
+	default RenderLayer getRenderLayer() {
+		return RenderLayer.getTranslucent();
 	}
 	// TODO: conversion from Minecraft fluids
 }

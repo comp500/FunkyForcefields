@@ -1,0 +1,7 @@
+{
+	"parent": "funkyforcefields:block/forcefield_horizontal",
+	"textures": {
+		"main": "minecraft:block/glass",
+		"particle": "minecraft:block/glass"
+	}
+}

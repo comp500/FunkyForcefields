@@ -1,0 +1,7 @@
+{
+	"parent": "funkyforcefields:block/forcefield_horizontal",
+	"textures": {
+		"main": "minecraft:block/lava_still",
+		"particle": "minecraft:block/lava_still"
+	}
+}

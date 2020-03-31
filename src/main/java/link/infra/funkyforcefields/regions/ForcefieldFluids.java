@@ -1,6 +1,9 @@
 package link.infra.funkyforcefields.regions;
 
 import link.infra.funkyforcefields.FunkyForcefields;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
@@ -53,8 +56,8 @@ public class ForcefieldFluids {
 		}
 
 		@Override
-		public boolean isTranslucent() {
-			return false;
+		public RenderLayer getRenderLayer() {
+			return null;
 		}
 	};
 
@@ -90,6 +93,12 @@ public class ForcefieldFluids {
 		@Override
 		public Identifier getBaseIdentifier() {
 			return new Identifier(FunkyForcefields.MODID, "glass_forcefield");
+		}
+
+		@Environment(EnvType.CLIENT)
+		@Override
+		public RenderLayer getRenderLayer() {
+			return RenderLayer.getCutout();
 		}
 	};
 
