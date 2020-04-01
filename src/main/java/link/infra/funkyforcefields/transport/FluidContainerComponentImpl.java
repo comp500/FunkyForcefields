@@ -3,6 +3,8 @@ package link.infra.funkyforcefields.transport;
 import link.infra.funkyforcefields.regions.ForcefieldFluid;
 import net.minecraft.nbt.CompoundTag;
 
+import java.util.Objects;
+
 public class FluidContainerComponentImpl implements FluidContainerComponent {
 	final float containerVolume;
 	float pressure;
@@ -80,5 +82,22 @@ public class FluidContainerComponentImpl implements FluidContainerComponent {
 		if (Math.abs(pressure - TransportUtilities.NOMINAL_PRESSURE) <= TransportUtilities.NEGLIGIBILITY) {
 			containedFluid = null;
 		}
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		FluidContainerComponentImpl that = (FluidContainerComponentImpl) o;
+		return Float.compare(that.getContainerVolume(), getContainerVolume()) == 0 &&
+			Float.compare(that.getPressure(), getPressure()) == 0 &&
+			Float.compare(that.getThermalDiffusivity(), getThermalDiffusivity()) == 0 &&
+			Float.compare(that.getTemperature(), getTemperature()) == 0 &&
+			Objects.equals(getContainedFluid(), that.getContainedFluid());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getContainerVolume(), getPressure(), getThermalDiffusivity(), getTemperature(), getContainedFluid());
 	}
 }

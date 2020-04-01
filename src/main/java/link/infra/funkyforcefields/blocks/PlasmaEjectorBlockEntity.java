@@ -93,7 +93,7 @@ public class PlasmaEjectorBlockEntity extends BlockEntity implements ForcefieldR
 
 	@Override
 	public <T extends Component> boolean hasComponent(BlockView blockView, BlockPos blockPos, ComponentType<T> componentType, Direction direction) {
-		if (componentType.getRawId() != FluidContainerComponent.TYPE.getRawId()) {
+		if (componentType == FluidContainerComponent.TYPE) {
 			return false;
 		}
 		BlockState state = blockView.getBlockState(blockPos);
@@ -112,6 +112,7 @@ public class PlasmaEjectorBlockEntity extends BlockEntity implements ForcefieldR
 		return false;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends Component> T getComponent(BlockView blockView, BlockPos blockPos, ComponentType<T> componentType, Direction direction) {
 		if (hasComponent(blockView, blockPos, componentType, direction)) {
