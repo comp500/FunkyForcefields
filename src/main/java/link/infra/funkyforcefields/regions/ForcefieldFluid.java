@@ -22,21 +22,6 @@ public interface ForcefieldFluid {
 		}
 	};
 
-	ForcefieldFluid EMPTY = new ForcefieldFluid() {
-		@Override
-		public boolean allowsEntity(Entity ent) {
-			return false;
-		}
-
-		@Override
-		public void applyCollisionEffect(World world, BlockPos pos, Entity entity) {}
-
-		@Override
-		public Identifier getBaseIdentifier() {
-			return null;
-		}
-	};
-
 	boolean allowsEntity(Entity ent);
 	void applyCollisionEffect(World world, BlockPos pos, Entity entity);
 	Identifier getBaseIdentifier();

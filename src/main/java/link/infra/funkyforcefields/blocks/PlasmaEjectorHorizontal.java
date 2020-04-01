@@ -2,6 +2,9 @@ package link.infra.funkyforcefields.blocks;
 
 import link.infra.funkyforcefields.regions.ForcefieldRegion;
 import link.infra.funkyforcefields.regions.ForcefieldRegionManager;
+import nerdhub.cardinal.components.api.ComponentType;
+import nerdhub.cardinal.components.api.component.BlockComponentProvider;
+import nerdhub.cardinal.components.api.component.Component;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -19,7 +22,10 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
-public class PlasmaEjectorHorizontal extends HorizontalFacingBlock implements BlockEntityProvider {
+import java.util.Collections;
+import java.util.Set;
+
+public class PlasmaEjectorHorizontal extends HorizontalFacingBlock implements BlockEntityProvider, BlockComponentProvider {
 	public PlasmaEjectorHorizontal() {
 		super(FabricBlockSettings.of(Material.BARRIER).build());
 		setDefaultState(this.stateManager.getDefaultState()
@@ -94,5 +100,32 @@ public class PlasmaEjectorHorizontal extends HorizontalFacingBlock implements Bl
 			}
 		}
 		super.neighborUpdate(state, world, pos, block, neighborPos, moved);
+	}
+
+	@Override
+	public <T extends Component> boolean hasComponent(BlockView blockView, BlockPos blockPos, ComponentType<T> componentType, Direction direction) {
+		BlockEntity be = blockView.getBlockEntity(blockPos);
+		if (be instanceof PlasmaEjectorBlockEntity) {
+			return ((PlasmaEjectorBlockEntity) be).hasComponent(blockView, blockPos, componentType, direction);
+		}
+		return false;
+	}
+
+	@Override
+	public <T extends Component> T getComponent(BlockView blockView, BlockPos blockPos, ComponentType<T> componentType, Direction direction) {
+		BlockEntity be = blockView.getBlockEntity(blockPos);
+		if (be instanceof PlasmaEjectorBlockEntity) {
+			return ((PlasmaEjectorBlockEntity) be).getComponent(blockView, blockPos, componentType, direction);
+		}
+		return null;
+	}
+
+	@Override
+	public Set<ComponentType<?>> getComponentTypes(BlockView blockView, BlockPos blockPos, Direction direction) {
+		BlockEntity be = blockView.getBlockEntity(blockPos);
+		if (be instanceof PlasmaEjectorBlockEntity) {
+			return ((PlasmaEjectorBlockEntity) be).getComponentTypes(blockView, blockPos, direction);
+		}
+		return Collections.emptySet();
 	}
 }

@@ -5,12 +5,23 @@ import link.infra.funkyforcefields.regions.ForcefieldFluids;
 import link.infra.funkyforcefields.regions.ForcefieldRegionHolder;
 import link.infra.funkyforcefields.regions.ForcefieldRegionLine;
 import link.infra.funkyforcefields.regions.ForcefieldRegionManager;
+import link.infra.funkyforcefields.transport.FluidContainerComponent;
+import link.infra.funkyforcefields.transport.FluidContainerComponentImpl;
+import nerdhub.cardinal.components.api.ComponentType;
+import nerdhub.cardinal.components.api.component.BlockComponentProvider;
+import nerdhub.cardinal.components.api.component.Component;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.BlockView;
 
-public class PlasmaEjectorBlockEntity extends BlockEntity implements ForcefieldRegionHolder, Tickable {
+import java.util.Collections;
+import java.util.Set;
+
+public class PlasmaEjectorBlockEntity extends BlockEntity implements ForcefieldRegionHolder, Tickable, BlockComponentProvider {
 	private ForcefieldRegionLine region;
 	private boolean queueBlockPlace = false;
 
@@ -64,5 +75,53 @@ public class PlasmaEjectorBlockEntity extends BlockEntity implements ForcefieldR
 				queueBlockPlace = false;
 			}
 		}
+	}
+
+	private final FluidContainerComponent fluidContainerComponent = new FluidContainerComponentImpl(0, 0.3f);
+
+	@Override
+	public void fromTag(CompoundTag tag) {
+		super.fromTag(tag);
+		fluidContainerComponent.fromTag(tag);
+	}
+
+	@Override
+	public CompoundTag toTag(CompoundTag tag) {
+		tag = super.toTag(tag);
+		return fluidContainerComponent.toTag(tag);
+	}
+
+	@Override
+	public <T extends Component> boolean hasComponent(BlockView blockView, BlockPos blockPos, ComponentType<T> componentType, Direction direction) {
+		if (componentType.getRawId() != FluidContainerComponent.TYPE.getRawId()) {
+			return false;
+		}
+		BlockState state = blockView.getBlockState(blockPos);
+		if (state.getBlock() instanceof PlasmaEjectorVertical) {
+			switch (state.get(PlasmaEjectorVertical.POINTING)) {
+				case UP:
+					return Direction.DOWN == direction;
+				case DOWN:
+					return Direction.UP == direction;
+				case SIDEWAYS:
+					return state.get(PlasmaEjectorVertical.FACING).getOpposite() == direction;
+			}
+		} else {
+			return state.get(PlasmaEjectorHorizontal.FACING).getOpposite() == direction;
+		}
+		return false;
+	}
+
+	@Override
+	public <T extends Component> T getComponent(BlockView blockView, BlockPos blockPos, ComponentType<T> componentType, Direction direction) {
+		if (hasComponent(blockView, blockPos, componentType, direction)) {
+			return (T) fluidContainerComponent;
+		}
+		return null;
+	}
+
+	@Override
+	public Set<ComponentType<?>> getComponentTypes(BlockView blockView, BlockPos blockPos, Direction direction) {
+		return Collections.singleton(FluidContainerComponent.TYPE);
 	}
 }
