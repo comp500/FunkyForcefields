@@ -89,6 +89,8 @@ public class FunkyForcefields implements ModInitializer, ClientModInitializer {
 		Registry.register(Registry.BLOCK, new Identifier(MODID, "liquid_input_hatch"), LIQUID_INPUT_HATCH);
 		Registry.register(Registry.ITEM, new Identifier(MODID, "liquid_input_hatch"),
 			new BlockItem(LIQUID_INPUT_HATCH, new Item.Settings().group(ITEM_GROUP)));
+		LIQUID_INPUT_HATCH_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(MODID, "liquid_input_hatch"),
+			BlockEntityType.Builder.create(LiquidInputHatchBlockEntity::new, LIQUID_INPUT_HATCH).build(null));
 	}
 
 	@Environment(EnvType.CLIENT)

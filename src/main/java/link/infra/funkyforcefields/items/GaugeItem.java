@@ -37,17 +37,16 @@ public class GaugeItem extends Item {
 	}
 
 	private static void printInformation(PlayerEntity player, FluidContainerComponent component) {
-		// TODO: translate
 		ForcefieldFluid fluid = component.getContainedFluid();
 		if (fluid == null) {
-			player.sendMessage(new TranslatableText("fluidname").append(new TranslatableText("none")));
+			player.sendMessage(new TranslatableText("item.funkyforcefields.gauge.fluidname").append(new TranslatableText("item.funkyforcefields.gauge.empty")));
 		} else {
-			player.sendMessage(new TranslatableText("fluidname").append(fluid.getFluidName()));
+			player.sendMessage(new TranslatableText("item.funkyforcefields.gauge.fluidname").append(fluid.getFluidName()));
 		}
-		player.sendMessage(new TranslatableText("volume").append(Float.toString(component.getContainerVolume())));
-		player.sendMessage(new TranslatableText("thermal_diffusivity").append(Float.toString(component.getThermalDiffusivity())));
-		player.sendMessage(new TranslatableText("pressure").append(Float.toString(component.getPressure())));
-		player.sendMessage(new TranslatableText("temperature").append(Float.toString(component.getTemperature())));
+		player.sendMessage(new TranslatableText("item.funkyforcefields.gauge.volume").append(Float.toString(component.getContainerVolume())));
+		player.sendMessage(new TranslatableText("item.funkyforcefields.gauge.thermal_diffusivity").append(Float.toString(component.getThermalDiffusivity())));
+		player.sendMessage(new TranslatableText("item.funkyforcefields.gauge.pressure").append(Float.toString(component.getPressure())));
+		player.sendMessage(new TranslatableText("item.funkyforcefields.gauge.temperature").append(Float.toString(component.getTemperature())));
 	}
 
 	private static void printDirectionList(PlayerEntity player, List<Direction> directions) {
@@ -122,10 +121,6 @@ public class GaugeItem extends Item {
 					return ActionResult.SUCCESS;
 				}
 			}
-		}
-		if (!context.getWorld().isClient()) {
-			// TODO: translate
-			player.sendMessage(new TranslatableText("not a block!!!"));
 		}
 		return ActionResult.FAIL;
 	}

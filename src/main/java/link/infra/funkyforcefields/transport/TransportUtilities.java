@@ -6,8 +6,8 @@ public class TransportUtilities {
 	public static float NOMINAL_PRESSURE = 200;
 	public static float NOMINAL_TEMPERATURE = 290;
 	public static float ENVIRONMENT_DIFFUSIVITY = 0.0003F;
-	public static float ENVIRONMENT_DEPRESSURISATION = 0.0001F;
-	public static float NEGLIGIBILITY = 0.1F;
+	public static float ENVIRONMENT_DEPRESSURISATION = 0.00005F;
+	public static float NEGLIGIBILITY = 1F;
 
 	public static float tickTemperature(float thermalDiffusivity, float currTemperature, float... neighbourTemperatures) {
 		if (neighbourTemperatures.length > 0) {

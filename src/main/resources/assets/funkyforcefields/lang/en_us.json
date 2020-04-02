@@ -3,10 +3,18 @@
 	"block.funkyforcefields.plasma_ejector_vertical": "Plasma Ejector (Vertical)",
 	"block.funkyforcefields.plasma_ejector_horizontal": "Plasma Ejector (Horizontal)",
 	"block.funkyforcefields.pipe": "Fluid Pipe",
+	"item.funkyforcefields.gauge": "Gauge",
 	"item.funkyforcefields.gauge.north": "North",
 	"item.funkyforcefields.gauge.east": "East",
 	"item.funkyforcefields.gauge.south": "South",
 	"item.funkyforcefields.gauge.west": "West",
 	"item.funkyforcefields.gauge.up": "Up",
-	"item.funkyforcefields.gauge.down": "Down"
+	"item.funkyforcefields.gauge.down": "Down",
+	"item.funkyforcefields.gauge.fluidname": "Fluid: ",
+	"item.funkyforcefields.gauge.empty": "Empty",
+	"item.funkyforcefields.gauge.volume": "Volume: ",
+	"item.funkyforcefields.gauge.thermal_diffusivity": "Thermal Diffusivity: ",
+	"item.funkyforcefields.gauge.pressure": "Pressure: ",
+	"item.funkyforcefields.gauge.temperature": "Temperature: ",
+	"block.funkyforcefields.liquid_input_hatch": "Liquid Input Hatch"
 }

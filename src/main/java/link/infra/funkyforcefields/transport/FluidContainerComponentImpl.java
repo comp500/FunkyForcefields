@@ -75,16 +75,31 @@ public class FluidContainerComponentImpl implements FluidContainerComponent {
 		return compoundTag;
 	}
 
-	public void tick(FluidContainerComponent... neighbours) {
-		float[] neighbourValues = new float[neighbours.length];
-		for (int i = 0; i < neighbours.length; i++) {
-			neighbourValues[i] = neighbours[i].getPressure();
+	public void tick(FluidContainerComponent... neighbors) {
+		if (containedFluid == null) {
+			FluidContainerComponent biggestNeighbor = null;
+			for (FluidContainerComponent neighbor : neighbors) {
+				if (neighbor.getContainedFluid() != null) {
+					if (biggestNeighbor == null) {
+						biggestNeighbor = neighbor;
+					} else if (neighbor.getPressure() > biggestNeighbor.getPressure()) {
+						biggestNeighbor = neighbor;
+					}
+				}
+			}
+			if (biggestNeighbor != null && biggestNeighbor.getPressure() > pressure) {
+				containedFluid = biggestNeighbor.getContainedFluid();
+			}
 		}
-		pressure = TransportUtilities.tickPressure(containerVolume, pressure, neighbourValues);
-		for (int i = 0; i < neighbours.length; i++) {
-			neighbourValues[i] = neighbours[i].getTemperature();
+		float[] neighborValues = new float[neighbors.length];
+		for (int i = 0; i < neighbors.length; i++) {
+			neighborValues[i] = neighbors[i].getPressure();
 		}
-		temperature = TransportUtilities.tickTemperature(thermalDiffusivity, temperature, neighbourValues);
+		pressure = TransportUtilities.tickPressure(containerVolume, pressure, neighborValues);
+		for (int i = 0; i < neighbors.length; i++) {
+			neighborValues[i] = neighbors[i].getTemperature();
+		}
+		temperature = TransportUtilities.tickTemperature(thermalDiffusivity, temperature, neighborValues);
 		if (Math.abs(pressure - TransportUtilities.NOMINAL_PRESSURE) <= TransportUtilities.NEGLIGIBILITY) {
 			containedFluid = null;
 		}
