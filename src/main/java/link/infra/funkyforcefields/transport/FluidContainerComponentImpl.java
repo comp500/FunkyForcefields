@@ -7,9 +7,9 @@ import java.util.Objects;
 
 public class FluidContainerComponentImpl implements FluidContainerComponent {
 	final float containerVolume;
-	float pressure;
+	float pressure = TransportUtilities.NOMINAL_PRESSURE;
 	final float thermalDiffusivity;
-	float temperature;
+	float temperature = TransportUtilities.NOMINAL_TEMPERATURE;
 	ForcefieldFluid containedFluid;
 
 	public FluidContainerComponentImpl(float containerVolume, float thermalDiffusivity) {
@@ -58,14 +58,20 @@ public class FluidContainerComponentImpl implements FluidContainerComponent {
 	public void fromTag(CompoundTag compoundTag) {
 		pressure = compoundTag.getFloat("pressure");
 		temperature = compoundTag.getFloat("temperature");
-		containedFluid = ForcefieldFluid.REGISTRY.get(compoundTag.getInt("containedFluid"));
+		if (compoundTag.getInt("containedFluid") != -1) {
+			containedFluid = ForcefieldFluid.REGISTRY.get(compoundTag.getInt("containedFluid"));
+		}
 	}
 
 	@Override
 	public CompoundTag toTag(CompoundTag compoundTag) {
 		compoundTag.putFloat("pressure", pressure);
 		compoundTag.putFloat("temperature", temperature);
-		compoundTag.putInt("containedFluid", ForcefieldFluid.REGISTRY.getRawId(containedFluid));
+		if (containedFluid != null) {
+			compoundTag.putInt("containedFluid", ForcefieldFluid.REGISTRY.getRawId(containedFluid));
+		} else {
+			compoundTag.putInt("containedFluid", -1);
+		}
 		return compoundTag;
 	}
 

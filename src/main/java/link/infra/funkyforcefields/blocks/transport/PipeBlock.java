@@ -2,9 +2,13 @@ package link.infra.funkyforcefields.blocks.transport;
 
 import link.infra.funkyforcefields.transport.FluidContainerComponent;
 import link.infra.funkyforcefields.transport.PipeConnection;
+import nerdhub.cardinal.components.api.ComponentType;
 import nerdhub.cardinal.components.api.component.BlockComponentProvider;
+import nerdhub.cardinal.components.api.component.Component;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.EntityContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
@@ -18,7 +22,10 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
 
-public class PipeBlock extends Block {
+import java.util.Collections;
+import java.util.Set;
+
+public class PipeBlock extends Block implements BlockEntityProvider, BlockComponentProvider {
 	public static final EnumProperty<PipeConnection> NORTH = EnumProperty.of("north", PipeConnection.class);
 	public static final EnumProperty<PipeConnection> EAST = EnumProperty.of("east", PipeConnection.class);
 	public static final EnumProperty<PipeConnection> SOUTH = EnumProperty.of("south", PipeConnection.class);
@@ -64,6 +71,38 @@ public class PipeBlock extends Block {
 				return DOWN;
 		}
 		return null;
+	}
+
+	@Override
+	public BlockEntity createBlockEntity(BlockView view) {
+		return new PipeBlockEntity();
+	}
+
+	@Override
+	public <T extends Component> boolean hasComponent(BlockView blockView, BlockPos blockPos, ComponentType<T> componentType, Direction direction) {
+		BlockEntity be = blockView.getBlockEntity(blockPos);
+		if (be instanceof PipeBlockEntity) {
+			return ((PipeBlockEntity) be).hasComponent(blockView, blockPos, componentType, direction);
+		}
+		return false;
+	}
+
+	@Override
+	public <T extends Component> T getComponent(BlockView blockView, BlockPos blockPos, ComponentType<T> componentType, Direction direction) {
+		BlockEntity be = blockView.getBlockEntity(blockPos);
+		if (be instanceof PipeBlockEntity) {
+			return ((PipeBlockEntity) be).getComponent(blockView, blockPos, componentType, direction);
+		}
+		return null;
+	}
+
+	@Override
+	public Set<ComponentType<?>> getComponentTypes(BlockView blockView, BlockPos blockPos, Direction direction) {
+		BlockEntity be = blockView.getBlockEntity(blockPos);
+		if (be instanceof PipeBlockEntity) {
+			return ((PipeBlockEntity) be).getComponentTypes(blockView, blockPos, direction);
+		}
+		return Collections.emptySet();
 	}
 
 	private static class CursedShapeHolder {

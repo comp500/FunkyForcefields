@@ -2,6 +2,8 @@ package link.infra.funkyforcefields;
 
 import link.infra.funkyforcefields.blocks.*;
 import link.infra.funkyforcefields.blocks.transport.PipeBlock;
+import link.infra.funkyforcefields.blocks.transport.PipeBlockEntity;
+import link.infra.funkyforcefields.items.GaugeItem;
 import link.infra.funkyforcefields.regions.ForcefieldFluid;
 import link.infra.funkyforcefields.regions.ForcefieldFluids;
 import net.fabricmc.api.ClientModInitializer;
@@ -29,15 +31,19 @@ public class FunkyForcefields implements ModInitializer, ClientModInitializer {
 	private static Block FUNKY_GOO_ITEMGROUP_ICON;
 	public static final Block PLASMA_EJECTOR_VERTICAL = new PlasmaEjectorVertical();
 	public static final Block PLASMA_EJECTOR_HORIZONTAL = new PlasmaEjectorHorizontal();
-	// TODO: customise block settings? and for plasma ejector?
-	public static final Block PIPE = new PipeBlock(FabricBlockSettings.of(Material.METAL).build());
 
 	public static BlockEntityType<PlasmaEjectorBlockEntity> PLASMA_EJECTOR_BLOCK_ENTITY;
+
+	// TODO: customise block settings? and for plasma ejector?
+	public static final Block PIPE = new PipeBlock(FabricBlockSettings.of(Material.METAL).build());
+	public static BlockEntityType<PipeBlockEntity> PIPE_BLOCK_ENTITY;
 
 	public static final ItemGroup ITEM_GROUP = FabricItemGroupBuilder.build(
 		new Identifier(MODID, "main"),
 		() -> new ItemStack(FUNKY_GOO_ITEMGROUP_ICON)
 	);
+
+	public static final Item GAUGE = new GaugeItem(new Item.Settings().group(ITEM_GROUP));
 
 	@Override
 	public void onInitialize() {
@@ -69,6 +75,11 @@ public class FunkyForcefields implements ModInitializer, ClientModInitializer {
 		Registry.register(Registry.BLOCK, new Identifier(MODID, "pipe"), PIPE);
 		Registry.register(Registry.ITEM, new Identifier(MODID, "pipe"),
 			new BlockItem(PIPE, new Item.Settings().group(ITEM_GROUP)));
+
+		PIPE_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(MODID, "pipe"),
+			BlockEntityType.Builder.create(PipeBlockEntity::new, PIPE).build(null));
+
+		Registry.register(Registry.ITEM, new Identifier(MODID, "gauge"), GAUGE);
 	}
 
 	@Environment(EnvType.CLIENT)

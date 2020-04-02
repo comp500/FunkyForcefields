@@ -51,21 +51,20 @@ public class PlasmaEjectorBlockEntity extends BlockEntity implements ForcefieldR
 	public void tick() {
 		if (world != null && !world.isClient) {
 			if (region == null) {
-				BlockState state = world.getBlockState(pos);
-				if (state.getBlock() instanceof PlasmaEjectorVertical) {
+				if (getCachedState().getBlock() instanceof PlasmaEjectorVertical) {
 					// TODO: fluid system, length
-					switch (state.get(PlasmaEjectorVertical.POINTING)) {
+					switch (getCachedState().get(PlasmaEjectorVertical.POINTING)) {
 						case UP:
-							region = new ForcefieldRegionLine(pos, 10, Direction.UP, state.get(PlasmaEjectorVertical.FACING), ForcefieldFluids.GLASS);
+							region = new ForcefieldRegionLine(pos, 10, Direction.UP, getCachedState().get(PlasmaEjectorVertical.FACING), ForcefieldFluids.GLASS);
 							break;
 						case DOWN:
-							region = new ForcefieldRegionLine(pos, 10, Direction.DOWN, state.get(PlasmaEjectorVertical.FACING), ForcefieldFluids.GLASS);
+							region = new ForcefieldRegionLine(pos, 10, Direction.DOWN, getCachedState().get(PlasmaEjectorVertical.FACING), ForcefieldFluids.GLASS);
 							break;
 						case SIDEWAYS:
-							region = new ForcefieldRegionLine(pos, 10, state.get(PlasmaEjectorVertical.FACING), state.get(PlasmaEjectorVertical.FACING), ForcefieldFluids.GLASS);
+							region = new ForcefieldRegionLine(pos, 10, getCachedState().get(PlasmaEjectorVertical.FACING), getCachedState().get(PlasmaEjectorVertical.FACING), ForcefieldFluids.GLASS);
 					}
 				} else {
-					region = new ForcefieldRegionLine(pos, 10, state.get(PlasmaEjectorHorizontal.FACING), Direction.UP, ForcefieldFluids.GLASS);
+					region = new ForcefieldRegionLine(pos, 10, getCachedState().get(PlasmaEjectorHorizontal.FACING), Direction.UP, ForcefieldFluids.GLASS);
 				}
 				registerRegion(region, world);
 			}
@@ -74,10 +73,33 @@ public class PlasmaEjectorBlockEntity extends BlockEntity implements ForcefieldR
 				region.placeBlocks(world);
 				queueBlockPlace = false;
 			}
+			// TODO: cache component connection?
+			Direction dir = null;
+			if (getCachedState().getBlock() instanceof PlasmaEjectorVertical) {
+				switch (getCachedState().get(PlasmaEjectorVertical.POINTING)) {
+					case UP:
+						dir = Direction.DOWN;
+						break;
+					case DOWN:
+						dir = Direction.UP;
+						break;
+					case SIDEWAYS:
+						dir = getCachedState().get(PlasmaEjectorVertical.FACING).getOpposite();
+				}
+			} else {
+				dir = getCachedState().get(PlasmaEjectorHorizontal.FACING).getOpposite();
+			}
+			BlockPos neighborPos = pos.offset(dir, 1);
+			BlockEntity be = world.getBlockEntity(neighborPos);
+			if (be instanceof BlockComponentProvider && ((BlockComponentProvider) be).hasComponent(world, neighborPos, FluidContainerComponent.TYPE, dir.getOpposite())) {
+				fluidContainerComponent.tick(((BlockComponentProvider) be).getComponent(world, neighborPos, FluidContainerComponent.TYPE, dir.getOpposite()));
+			} else {
+				fluidContainerComponent.tick();
+			}
 		}
 	}
 
-	private final FluidContainerComponent fluidContainerComponent = new FluidContainerComponentImpl(0, 0.3f);
+	private final FluidContainerComponentImpl fluidContainerComponent = new FluidContainerComponentImpl(0, 0.3f);
 
 	@Override
 	public void fromTag(CompoundTag tag) {
@@ -95,6 +117,9 @@ public class PlasmaEjectorBlockEntity extends BlockEntity implements ForcefieldR
 	public <T extends Component> boolean hasComponent(BlockView blockView, BlockPos blockPos, ComponentType<T> componentType, Direction direction) {
 		if (componentType != FluidContainerComponent.TYPE) {
 			return false;
+		}
+		if (direction == null) {
+			return true;
 		}
 		BlockState state = blockView.getBlockState(blockPos);
 		if (state.getBlock() instanceof PlasmaEjectorVertical) {

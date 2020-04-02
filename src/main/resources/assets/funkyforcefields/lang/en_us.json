@@ -2,5 +2,11 @@
 	"itemGroup.funkyforcefields.main": "Funky Forcefields",
 	"block.funkyforcefields.plasma_ejector_vertical": "Plasma Ejector (Vertical)",
 	"block.funkyforcefields.plasma_ejector_horizontal": "Plasma Ejector (Horizontal)",
-	"block.funkyforcefields.pipe": "Fluid Pipe"
+	"block.funkyforcefields.pipe": "Fluid Pipe",
+	"item.funkyforcefields.gauge.north": "North",
+	"item.funkyforcefields.gauge.east": "East",
+	"item.funkyforcefields.gauge.south": "South",
+	"item.funkyforcefields.gauge.west": "West",
+	"item.funkyforcefields.gauge.up": "Up",
+	"item.funkyforcefields.gauge.down": "Down"
 }

@@ -10,6 +10,7 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -51,6 +52,11 @@ public class ForcefieldFluids {
 		}
 
 		@Override
+		public TranslatableText getFluidName() {
+			return new TranslatableText("block.minecraft.water");
+		}
+
+		@Override
 		public boolean hasModel() {
 			return false;
 		}
@@ -79,6 +85,11 @@ public class ForcefieldFluids {
 		public Identifier getBaseIdentifier() {
 			return new Identifier(FunkyForcefields.MODID, "lava_forcefield");
 		}
+
+		@Override
+		public TranslatableText getFluidName() {
+			return new TranslatableText("block.minecraft.lava");
+		}
 	};
 
 	public static final ForcefieldFluid GLASS = new ForcefieldFluid() {
@@ -93,6 +104,11 @@ public class ForcefieldFluids {
 		@Override
 		public Identifier getBaseIdentifier() {
 			return new Identifier(FunkyForcefields.MODID, "glass_forcefield");
+		}
+
+		@Override
+		public TranslatableText getFluidName() {
+			return new TranslatableText("block.minecraft.glass");
 		}
 
 		@Environment(EnvType.CLIENT)
@@ -118,6 +134,11 @@ public class ForcefieldFluids {
 		@Override
 		public Identifier getBaseIdentifier() {
 			return new Identifier(FunkyForcefields.MODID, "portal_forcefield");
+		}
+
+		@Override
+		public TranslatableText getFluidName() {
+			return new TranslatableText("block.minecraft.nether_portal");
 		}
 	};
 	// TODO: gooooooo?
