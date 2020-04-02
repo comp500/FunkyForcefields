@@ -1,4 +1,10 @@
 package link.infra.funkyforcefields.blocks.transport;
 
-public class LiquidInputHatchBlockEntity {
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityType;
+
+public class LiquidInputHatchBlockEntity extends BlockEntity {
+	public LiquidInputHatchBlockEntity(BlockEntityType<?> type) {
+		super(type);
+	}
 }

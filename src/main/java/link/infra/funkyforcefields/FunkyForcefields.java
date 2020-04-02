@@ -1,6 +1,8 @@
 package link.infra.funkyforcefields;
 
 import link.infra.funkyforcefields.blocks.*;
+import link.infra.funkyforcefields.blocks.transport.LiquidInputHatchBlock;
+import link.infra.funkyforcefields.blocks.transport.LiquidInputHatchBlockEntity;
 import link.infra.funkyforcefields.blocks.transport.PipeBlock;
 import link.infra.funkyforcefields.blocks.transport.PipeBlockEntity;
 import link.infra.funkyforcefields.items.GaugeItem;
@@ -45,6 +47,9 @@ public class FunkyForcefields implements ModInitializer, ClientModInitializer {
 
 	public static final Item GAUGE = new GaugeItem(new Item.Settings().group(ITEM_GROUP));
 
+	public static final Block LIQUID_INPUT_HATCH = new LiquidInputHatchBlock(FabricBlockSettings.of(Material.METAL).build());
+	public static BlockEntityType<LiquidInputHatchBlockEntity> LIQUID_INPUT_HATCH_BLOCK_ENTITY;
+
 	@Override
 	public void onInitialize() {
 		Registry.register(Registry.REGISTRIES, new Identifier(MODID, "forcefield_type"), ForcefieldFluid.REGISTRY);
@@ -80,6 +85,10 @@ public class FunkyForcefields implements ModInitializer, ClientModInitializer {
 			BlockEntityType.Builder.create(PipeBlockEntity::new, PIPE).build(null));
 
 		Registry.register(Registry.ITEM, new Identifier(MODID, "gauge"), GAUGE);
+
+		Registry.register(Registry.BLOCK, new Identifier(MODID, "liquid_input_hatch"), LIQUID_INPUT_HATCH);
+		Registry.register(Registry.ITEM, new Identifier(MODID, "liquid_input_hatch"),
+			new BlockItem(LIQUID_INPUT_HATCH, new Item.Settings().group(ITEM_GROUP)));
 	}
 
 	@Environment(EnvType.CLIENT)
