@@ -1,0 +1,83 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "minecraft:block/block",
+	"textures": {
+		"0": "funkyforcefields:block/pipe_body",
+		"1": "funkyforcefields:block/pipe_end",
+		"particle": "funkyforcefields:block/pipe_body"
+	},
+	"elements": [
+		{
+			"from": [4, 4, 4],
+			"to": [12, 12, 12],
+			"faces": {
+				"north": {"uv": [4, 4, 12, 12], "texture": "#0"},
+				"south": {"uv": [4, 4, 12, 12], "texture": "#0"},
+				"up": {"uv": [4, 4, 12, 12], "rotation": 90, "texture": "#0"},
+				"down": {"uv": [4, 4, 12, 12], "rotation": 270, "texture": "#0"}
+			}
+		},
+		{
+			"from": [1, 4, 4],
+			"to": [4, 12, 12],
+			"faces": {
+				"north": {"uv": [12, 15, 4, 12], "rotation": 90, "texture": "#0"},
+				"south": {"uv": [12, 15, 4, 12], "rotation": 270, "texture": "#0"},
+				"up": {"uv": [12, 15, 4, 12], "rotation": 270, "texture": "#0"},
+				"down": {"uv": [12, 15, 4, 12], "rotation": 270, "texture": "#0"}
+			}
+		},
+		{
+			"from": [0, 3, 3],
+			"to": [1, 13, 13],
+			"faces": {
+				"north": {"uv": [3, 3, 4, 13], "rotation": 180, "texture": "#1"},
+				"east": {"uv": [3, 3, 13, 13], "rotation": 180, "texture": "#1"},
+				"south": {"uv": [12, 3, 13, 13], "rotation": 180, "texture": "#1", "cullface": "south"},
+				"west": {"uv": [3, 3, 13, 13], "rotation": 180, "texture": "#1", "cullface": "south"},
+				"up": {"uv": [3, 12, 13, 13], "rotation": 90, "texture": "#1"},
+				"down": {"uv": [3, 3, 13, 4], "rotation": 270, "texture": "#1"}
+			}
+		},
+		{
+			"from": [12, 4, 4],
+			"to": [15, 12, 12],
+			"faces": {
+				"north": {"uv": [12, 15, 4, 12], "rotation": 270, "texture": "#0"},
+				"south": {"uv": [12, 15, 4, 12], "rotation": 90, "texture": "#0"},
+				"up": {"uv": [12, 15, 4, 12], "rotation": 90, "texture": "#0"},
+				"down": {"uv": [12, 15, 4, 12], "rotation": 90, "texture": "#0"}
+			}
+		},
+		{
+			"from": [15, 3, 3],
+			"to": [16, 13, 13],
+			"faces": {
+				"north": {"uv": [3, 3, 4, 13], "texture": "#1", "cullface": "north"},
+				"east": {"uv": [3, 3, 13, 13], "texture": "#1", "cullface": "north"},
+				"south": {"uv": [12, 3, 13, 13], "texture": "#1"},
+				"west": {"uv": [3, 3, 13, 13], "texture": "#1"},
+				"up": {"uv": [3, 3, 13, 4], "rotation": 90, "texture": "#1"},
+				"down": {"uv": [3, 12, 13, 13], "rotation": 270, "texture": "#1"}
+			}
+		}
+	],
+	"display": {},
+	"groups": [
+		{
+			"name": "pipe_core",
+			"origin": [8, 8, 8],
+			"children": [0]
+		},
+		{
+			"name": "pipe_side_thick",
+			"origin": [8, 8, 8],
+			"children": [1, 2]
+		},
+		{
+			"name": "pipe_side_thick",
+			"origin": [8, 8, 8],
+			"children": [3, 4]
+		}
+	]
+}

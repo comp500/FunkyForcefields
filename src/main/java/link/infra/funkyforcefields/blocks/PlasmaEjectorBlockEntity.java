@@ -93,7 +93,7 @@ public class PlasmaEjectorBlockEntity extends BlockEntity implements ForcefieldR
 
 	@Override
 	public <T extends Component> boolean hasComponent(BlockView blockView, BlockPos blockPos, ComponentType<T> componentType, Direction direction) {
-		if (componentType == FluidContainerComponent.TYPE) {
+		if (componentType != FluidContainerComponent.TYPE) {
 			return false;
 		}
 		BlockState state = blockView.getBlockState(blockPos);

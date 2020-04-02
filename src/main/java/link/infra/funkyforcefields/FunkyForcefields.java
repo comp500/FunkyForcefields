@@ -1,16 +1,19 @@
 package link.infra.funkyforcefields;
 
 import link.infra.funkyforcefields.blocks.*;
+import link.infra.funkyforcefields.blocks.transport.PipeBlock;
 import link.infra.funkyforcefields.regions.ForcefieldFluid;
 import link.infra.funkyforcefields.regions.ForcefieldFluids;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Material;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -26,6 +29,8 @@ public class FunkyForcefields implements ModInitializer, ClientModInitializer {
 	private static Block FUNKY_GOO_ITEMGROUP_ICON;
 	public static final Block PLASMA_EJECTOR_VERTICAL = new PlasmaEjectorVertical();
 	public static final Block PLASMA_EJECTOR_HORIZONTAL = new PlasmaEjectorHorizontal();
+	// TODO: customise block settings? and for plasma ejector?
+	public static final Block PIPE = new PipeBlock(FabricBlockSettings.of(Material.METAL).build());
 
 	public static BlockEntityType<PlasmaEjectorBlockEntity> PLASMA_EJECTOR_BLOCK_ENTITY;
 
@@ -60,6 +65,10 @@ public class FunkyForcefields implements ModInitializer, ClientModInitializer {
 			}
 			return ActionResult.PASS;
 		});
+
+		Registry.register(Registry.BLOCK, new Identifier(MODID, "pipe"), PIPE);
+		Registry.register(Registry.ITEM, new Identifier(MODID, "pipe"),
+			new BlockItem(PIPE, new Item.Settings().group(ITEM_GROUP)));
 	}
 
 	@Environment(EnvType.CLIENT)
