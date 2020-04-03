@@ -14,6 +14,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -49,6 +50,9 @@ public class FunkyForcefields implements ModInitializer, ClientModInitializer {
 
 	public static final Block LIQUID_INPUT_HATCH = new LiquidInputHatchBlock(FabricBlockSettings.of(Material.METAL).build());
 	public static BlockEntityType<LiquidInputHatchBlockEntity> LIQUID_INPUT_HATCH_BLOCK_ENTITY;
+
+	public static final Block PLASMA_PROJECTOR = new PlasmaProjectorBlock(FabricBlockSettings.of(Material.METAL).build());
+	public static BlockEntityType<PlasmaProjectorBlockEntity> PLASMA_PROJECTOR_BLOCK_ENTITY;
 
 	@Override
 	public void onInitialize() {
@@ -91,11 +95,18 @@ public class FunkyForcefields implements ModInitializer, ClientModInitializer {
 			new BlockItem(LIQUID_INPUT_HATCH, new Item.Settings().group(ITEM_GROUP)));
 		LIQUID_INPUT_HATCH_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(MODID, "liquid_input_hatch"),
 			BlockEntityType.Builder.create(LiquidInputHatchBlockEntity::new, LIQUID_INPUT_HATCH).build(null));
+
+		Registry.register(Registry.BLOCK, new Identifier(MODID, "plasma_projector"), PLASMA_PROJECTOR);
+		Registry.register(Registry.ITEM, new Identifier(MODID, "plasma_projector"),
+			new BlockItem(PLASMA_PROJECTOR, new Item.Settings().group(ITEM_GROUP)));
+		PLASMA_PROJECTOR_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(MODID, "plasma_projector"),
+			BlockEntityType.Builder.create(PlasmaProjectorBlockEntity::new, PLASMA_PROJECTOR).build(null));
 	}
 
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void onInitializeClient() {
 		ForcefieldBlocks.initClient();
+		BlockEntityRendererRegistry.INSTANCE.register(PLASMA_PROJECTOR_BLOCK_ENTITY, PlasmaProjectorBlockEntityRenderer::new);
 	}
 }
