@@ -19,6 +19,6 @@ public class PlasmaProjectorBlock extends Block implements BlockEntityProvider {
 
 	@Override
 	public BlockRenderType getRenderType(BlockState state) {
-		return BlockRenderType.INVISIBLE;
+		return BlockRenderType.MODEL;
 	}
 }

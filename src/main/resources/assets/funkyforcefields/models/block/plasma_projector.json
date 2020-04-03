@@ -1,0 +1,9 @@
+{
+	"parent": "minecraft:block/cube_bottom_top",
+	"textures": {
+		"top": "funkyforcefields:block/plasma_projector",
+		"bottom": "funkyforcefields:block/input_side",
+		"side": "funkyforcefields:block/plain_side",
+		"particle": "funkyforcefields:block/plasma_projector"
+	}
+}
