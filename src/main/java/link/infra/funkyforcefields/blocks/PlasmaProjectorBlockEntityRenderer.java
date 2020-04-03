@@ -22,6 +22,11 @@ public class PlasmaProjectorBlockEntityRenderer extends BlockEntityRenderer<Plas
 	}
 
 	@Override
+	public boolean rendersOutsideBoundingBox(PlasmaProjectorBlockEntity blockEntity) {
+		return true;
+	}
+
+	@Override
 	public void render(PlasmaProjectorBlockEntity blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
 		matrices.push();
 		//matrices.translate(0, 1, 0);
@@ -30,56 +35,15 @@ public class PlasmaProjectorBlockEntityRenderer extends BlockEntityRenderer<Plas
 		matrices.scale(10f, 10f, 10f);
 		matrices.multiply(Vector3f.NEGATIVE_X.getDegreesQuaternion(90));
 
-//		MinecraftClient.getInstance().getItemRenderer().renderItem(new ItemStack(Items.ACACIA_BUTTON), ModelTransformation.Mode.GROUND, 0, OverlayTexture.DEFAULT_UV, matrices, vertexConsumers);
-
 		MinecraftClient.getInstance().getTextureManager().bindTexture(SpriteAtlasTexture.BLOCK_ATLAS_TEX);
-		Sprite sprite = MinecraftClient.getInstance().getSpriteAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEX).apply(new Identifier("minecraft:block/water_flow"));
+		Sprite sprite = MinecraftClient.getInstance().getSpriteAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEX).apply(new Identifier("minecraft:block/glass"));
 
-		VertexConsumer consumer = vertexConsumers.getBuffer(RenderLayer.getTranslucent());
+		VertexConsumer consumer = vertexConsumers.getBuffer(RenderLayer.getCutout());
 
 		float offset = (float) (Math.sin((Objects.requireNonNull(blockEntity.getWorld()).getTime() + tickDelta) / 8.0) / 4.0);
 		//int lightAbove = WorldRenderer.getLightmapCoordinates(blockEntity.getWorld(), blockEntity.getPos().up());
 		int lightAbove = 15728640;
-//		for (int i = 0; i < 5; i++) {
-//			MatrixStack.Entry entry = matrices.peek();
-//			consumer.vertex(entry.getModel(), 0, 0, 0)
-//				.color(255, 255, 255, 255)
-//				.texture(sprite.getMinU(), sprite.getMinV())
-//				.overlay(overlay)
-//				.light(lightAbove)
-//				.normal(entry.getNormal(), 0, 0, 0)
-//				.next();
-//			consumer.vertex(entry.getModel(), 0, 1, 0)
-//				.color(255, 255, 255, 255)
-//				.texture(sprite.getMinU(), sprite.getMaxV())
-//				.overlay(overlay)
-//				.light(lightAbove)
-//				.normal(entry.getNormal(), 0, 0, 0)
-//				.next();
-//			consumer.vertex(entry.getModel(), 1, 1, 0)
-//				.color(255, 255, 255, 255)
-//				.texture(sprite.getMaxU(), sprite.getMaxV())
-//				.overlay(overlay)
-//				.light(lightAbove)
-//				.normal(entry.getNormal(), 0, 0, 0)
-//				.next();
-//			consumer.vertex(entry.getModel(), 1, 0, 0)
-//				.color(255, 255, 255, 255)
-//				.texture(sprite.getMaxU(), sprite.getMinV())
-//				.overlay(overlay)
-//				.light(lightAbove)
-//				.normal(entry.getNormal(), 0, 0, 0)
-//				.next();
-//			if (i == 3) {
-//				matrices.translate(0.5, 0.5, 0.5);
-//				matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(90));
-//				matrices.translate(-0.5, -0.5, -0.5);
-//			} else {
-//				matrices.translate(0.5, 0.5, 0.5);
-//				matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(90));
-//				matrices.translate(-0.5, -0.5, -0.5);
-//			}
-//		}
+		// TODO: BAKE THOSE QUADS!!!
 
 		calcVertices(20, 10);
 		//calcVertices(200, 100);
@@ -98,21 +62,22 @@ public class PlasmaProjectorBlockEntityRenderer extends BlockEntityRenderer<Plas
 				.next();
 		}
 
-		// TODO: flip UVs?
-		matrices.scale(-1f, -1f, -1f);
 		entry = matrices.peek();
-		for (int i = 0; i < vertices.size(); i++) {
-			Vector3f vertex = vertices.get(i);
-			Vector3f normal = normals.get(i);
-			Vector3f uv = uvs.get(i);
-			consumer.vertex(entry.getModel(), vertex.getX(), vertex.getY(), vertex.getZ())
-				.color(255, 255, 255, 255)
-				//.texture(uv.getX(), uv.getY())
-				.texture(((sprite.getMaxU() - sprite.getMinU()) * uv.getX()) + sprite.getMinU(), ((sprite.getMaxV() - sprite.getMinV()) * uv.getY()) + sprite.getMinV())
-				.overlay(overlay)
-				.light(lightAbove)
-				.normal(entry.getNormal(), normal.getX(), normal.getY(), normal.getZ())
-				.next();
+		for (int i = 0; i < vertices.size(); i+= 4) {
+			for (int j = 3; j > -1; j--) {
+				Vector3f vertex = vertices.get(i+j);
+				Vector3f normal = normals.get(i+j);
+				Vector3f uv = uvs.get(i+j);
+				consumer.vertex(entry.getModel(), vertex.getX(), vertex.getY(), vertex.getZ())
+					.color(255, 255, 255, 255)
+					//.texture(uv.getX(), uv.getY())
+					.texture(((sprite.getMaxU() - sprite.getMinU()) * uv.getX()) + sprite.getMinU(), ((sprite.getMaxV() - sprite.getMinV()) * uv.getY()) + sprite.getMinV())
+					.overlay(overlay)
+					.light(lightAbove)
+					.normal(entry.getNormal(), normal.getX(), normal.getY(), normal.getZ())
+					.next();
+			}
+
 		}
 
 		matrices.pop();
