@@ -37,6 +37,9 @@ dependencies {
 	include "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-base:${cardinal_components_version}"
 	modApi "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-block:${cardinal_components_version}"
 	include "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-block:${cardinal_components_version}"
+	
+	// Nullability Annotations
+	implementation "com.google.code.findbugs:jsr305:${project.findbugs_version}"
 }
 
 processResources {

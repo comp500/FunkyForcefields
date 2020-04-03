@@ -1,6 +1,6 @@
 package link.infra.funkyforcefields.transport;
 
-import jdk.internal.jline.internal.Nullable;
+import javax.annotation.Nullable;
 import link.infra.funkyforcefields.FunkyForcefields;
 import link.infra.funkyforcefields.regions.ForcefieldFluid;
 import nerdhub.cardinal.components.api.ComponentRegistry;

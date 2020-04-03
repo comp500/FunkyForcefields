@@ -1,6 +1,6 @@
 package link.infra.funkyforcefields.regions;
 
-import jdk.internal.jline.internal.Nullable;
+import javax.annotation.Nullable;
 import link.infra.funkyforcefields.blocks.ForcefieldBlock;
 import link.infra.funkyforcefields.blocks.ForcefieldBlockHorizontal;
 import link.infra.funkyforcefields.blocks.ForcefieldBlockVertical;
