@@ -19,7 +19,7 @@
 			"link.infra.funkyforcefields.FunkyForcefields"
 		],
 		"client": [
-			"link.infra.funkyforcefields.FunkyForcefields"
+			"link.infra.funkyforcefields.FunkyForcefieldsClient"
 		]
 	},
 	"depends": {

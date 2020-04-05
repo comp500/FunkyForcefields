@@ -8,14 +8,9 @@ import link.infra.funkyforcefields.blocks.transport.PipeBlockEntity;
 import link.infra.funkyforcefields.items.GaugeItem;
 import link.infra.funkyforcefields.regions.ForcefieldFluid;
 import link.infra.funkyforcefields.regions.ForcefieldFluids;
-import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
-import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
-import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
@@ -35,7 +30,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 
-public class FunkyForcefields implements ModInitializer, ClientModInitializer {
+public class FunkyForcefields implements ModInitializer {
 	public static final String MODID = "funkyforcefields";
 
 	private static Block FUNKY_GOO_ITEMGROUP_ICON;
@@ -103,9 +98,7 @@ public class FunkyForcefields implements ModInitializer, ClientModInitializer {
 
 		Registry.register(Registry.BLOCK, new Identifier(MODID, "liquid_input_hatch"), LIQUID_INPUT_HATCH);
 		Registry.register(Registry.ITEM, new Identifier(MODID, "liquid_input_hatch"),
-			new BlockItem(LIQUID_INPUT_HATCH, new Item.Settings().group(ITEM_GROUP)) {
-
-			});
+			new BlockItem(LIQUID_INPUT_HATCH, new Item.Settings().group(ITEM_GROUP)));
 		LIQUID_INPUT_HATCH_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(MODID, "liquid_input_hatch"),
 			BlockEntityType.Builder.create(LiquidInputHatchBlockEntity::new, LIQUID_INPUT_HATCH).build(null));
 
@@ -130,13 +123,4 @@ public class FunkyForcefields implements ModInitializer, ClientModInitializer {
 		});
 	}
 
-	@Environment(EnvType.CLIENT)
-	@Override
-	public void onInitializeClient() {
-		ForcefieldBlocks.initClient();
-		BlockEntityRendererRegistry.INSTANCE.register(PLASMA_PROJECTOR_BLOCK_ENTITY, PlasmaProjectorBlockEntityRenderer::new);
-
-		ScreenProviderRegistry.INSTANCE.registerFactory(new Identifier(MODID, "plasma_ejector"), (syncId, identifier, player, buf) -> new PlasmaEjectorScreen(
-			new PlasmaEjectorController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())), player));
-	}
 }
