@@ -3,7 +3,8 @@
 	"package": "link.infra.funkyforcefields.mixin",
 	"compatibilityLevel": "JAVA_8",
 	"mixins": [
-		"EntityContextImplMixin"
+		"EntityContextImplMixin",
+		"MobEntityMixin"
 	],
 	"client": [
 		"WorldRendererMixin"

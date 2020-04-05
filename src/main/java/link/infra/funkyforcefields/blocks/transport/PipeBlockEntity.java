@@ -25,7 +25,7 @@ public class PipeBlockEntity extends BlockEntity implements Tickable, BlockCompo
 		super(FunkyForcefields.PIPE_BLOCK_ENTITY);
 	}
 
-	private final FluidContainerComponentImpl fluidContainerComponent = new FluidContainerComponentImpl(15, 0.2f);
+	private final FluidContainerComponentImpl fluidContainerComponent = new FluidContainerComponentImpl(6, 0.2f);
 
 	@Override
 	public void fromTag(CompoundTag tag) {

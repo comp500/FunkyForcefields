@@ -10,6 +10,7 @@ import nerdhub.cardinal.components.api.ComponentType;
 import nerdhub.cardinal.components.api.component.BlockComponentProvider;
 import nerdhub.cardinal.components.api.component.Component;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.FluidDrainable;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.EntityType;
@@ -42,11 +43,21 @@ public class LiquidInputHatchBlockEntity extends BlockEntity implements BlockCom
 		if (bs.getFluidState().getFluid().matchesType(Fluids.WATER)) {
 			return ForcefieldFluids.WATER;
 		}
+		if (bs.getFluidState().getFluid().matchesType(Fluids.LAVA)) {
+			return ForcefieldFluids.LAVA;
+		}
+		if (bs.getBlock() == Blocks.GLASS) {
+			return ForcefieldFluids.GLASS;
+		}
 		// TODO: make event driven?
 		List<ItemEntity> ents = world.getEntities(EntityType.ITEM, new Box(pos), item ->
-			item.getStack() != null && item.getStack().getItem().equals(Items.WATER_BUCKET));
+			item.getStack() != null && (item.getStack().getItem().equals(Items.WATER_BUCKET) || item.getStack().getItem().equals(Items.LAVA_BUCKET)));
 		if (ents.size() > 0) {
-			return ForcefieldFluids.WATER;
+			if (ents.get(0).getStack().getItem().equals(Items.WATER_BUCKET)) {
+				return ForcefieldFluids.WATER;
+			} else {
+				return ForcefieldFluids.LAVA;
+			}
 		}
 		return null;
 	}
@@ -59,9 +70,18 @@ public class LiquidInputHatchBlockEntity extends BlockEntity implements BlockCom
 			if (fluid.matchesType(Fluids.WATER)) {
 				return ForcefieldFluids.WATER;
 			}
+			if (fluid.matchesType(Fluids.LAVA)) {
+				return ForcefieldFluids.LAVA;
+			}
+		} else if (bs.getBlock() == Blocks.GLASS) {
+			if (world.removeBlock(pos.offset(Direction.UP), false)) {
+				return ForcefieldFluids.GLASS;
+			} else {
+				return null;
+			}
 		}
 		List<ItemEntity> ents = world.getEntities(EntityType.ITEM, new Box(pos), item ->
-			item.getStack() != null && item.getStack().getItem().equals(Items.WATER_BUCKET));
+			item.getStack() != null && (item.getStack().getItem().equals(Items.WATER_BUCKET) || item.getStack().getItem().equals(Items.LAVA_BUCKET)));
 		if (ents.size() > 0) {
 			ItemEntity ent = ents.get(0);
 			if (ent.isAlive()) {
@@ -69,7 +89,10 @@ public class LiquidInputHatchBlockEntity extends BlockEntity implements BlockCom
 				ItemEntity emptyBucket = new ItemEntity(world, ent.getX(), ent.getY(), ent.getZ(), new ItemStack(Items.BUCKET));
 				emptyBucket.setVelocity(new Vec3d(ent.getVelocity().getX(), 1, ent.getVelocity().getZ()));
 				world.spawnEntity(emptyBucket);
-				return ForcefieldFluids.WATER;
+				if (ent.getStack().getItem().equals(Items.WATER_BUCKET)) {
+					return ForcefieldFluids.WATER;
+				}
+				return ForcefieldFluids.LAVA;
 			}
 		}
 		return null;

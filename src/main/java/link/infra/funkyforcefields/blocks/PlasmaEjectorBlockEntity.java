@@ -119,6 +119,10 @@ public class PlasmaEjectorBlockEntity extends BlockEntity implements ForcefieldR
 			}
 			queuedBlockUpdate = false;
 			return;
+		} else {
+			if (region != null) {
+				updateRegion(false, true);
+			}
 		}
 
 		if (region != null) {
