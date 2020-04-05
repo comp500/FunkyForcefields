@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"W W",
+		"W W",
+		"WRW"
+	],
+	"key": {
+		"W": {
+			"item": "minecraft:iron_ingot"
+		},
+		"R": {
+			"item": "minecraft:hopper"
+		}
+	},
+	"result": {
+		"item": "funkyforcefields:liquid_input_hatch",
+		"count": 1
+	}
+}
+

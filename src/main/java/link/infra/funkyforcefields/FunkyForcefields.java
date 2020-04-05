@@ -29,6 +29,7 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -43,8 +44,7 @@ public class FunkyForcefields implements ModInitializer, ClientModInitializer {
 
 	public static BlockEntityType<PlasmaEjectorBlockEntity> PLASMA_EJECTOR_BLOCK_ENTITY;
 
-	// TODO: customise block settings? and for plasma ejector?
-	public static final Block PIPE = new PipeBlock(FabricBlockSettings.of(Material.METAL).build());
+	public static final Block PIPE = new PipeBlock(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL).build());
 	public static BlockEntityType<PipeBlockEntity> PIPE_BLOCK_ENTITY;
 
 	public static final ItemGroup ITEM_GROUP = FabricItemGroupBuilder.build(
@@ -54,10 +54,10 @@ public class FunkyForcefields implements ModInitializer, ClientModInitializer {
 
 	public static final Item GAUGE = new GaugeItem(new Item.Settings().group(ITEM_GROUP));
 
-	public static final Block LIQUID_INPUT_HATCH = new LiquidInputHatchBlock(FabricBlockSettings.of(Material.METAL).build());
+	public static final Block LIQUID_INPUT_HATCH = new LiquidInputHatchBlock(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL).build());
 	public static BlockEntityType<LiquidInputHatchBlockEntity> LIQUID_INPUT_HATCH_BLOCK_ENTITY;
 
-	public static final Block PLASMA_PROJECTOR = new PlasmaProjectorBlock(FabricBlockSettings.of(Material.METAL).build());
+	public static final Block PLASMA_PROJECTOR = new PlasmaProjectorBlock(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL).build());
 	public static BlockEntityType<PlasmaProjectorBlockEntity> PLASMA_PROJECTOR_BLOCK_ENTITY;
 
 	public static final Identifier PLASMA_EJECTOR_CONFIG_PACKET = new Identifier(MODID, "plasma_ejector");

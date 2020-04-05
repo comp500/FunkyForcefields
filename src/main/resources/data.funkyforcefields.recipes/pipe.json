@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"SIS",
+		"I I",
+		"SIS"
+	],
+	"key": {
+		"S": {
+			"item": "minecraft:stone"
+		},
+		"I": {
+			"item": "minecraft:iron_ingot"
+		}
+	},
+	"result": {
+		"item": "funkyforcefields:pipe",
+		"count": 1
+	}
+}
+

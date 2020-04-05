@@ -15,6 +15,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
@@ -34,7 +35,7 @@ import java.util.Set;
 
 public class PlasmaEjectorHorizontal extends HorizontalFacingBlock implements BlockEntityProvider, BlockComponentProvider {
 	public PlasmaEjectorHorizontal() {
-		super(FabricBlockSettings.of(Material.BARRIER).build());
+		super(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL).build());
 		setDefaultState(this.stateManager.getDefaultState()
 			.with(Properties.HORIZONTAL_FACING, Direction.NORTH));
 	}

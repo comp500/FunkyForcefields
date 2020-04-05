@@ -16,6 +16,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
@@ -39,7 +40,7 @@ public class PlasmaEjectorVertical extends HorizontalFacingBlock implements Bloc
 	public static final EnumProperty<CursedPointingDirection> POINTING = EnumProperty.of("pointing", CursedPointingDirection.class);
 
 	public PlasmaEjectorVertical() {
-		super(FabricBlockSettings.of(Material.BARRIER).build());
+		super(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL).build());
 		setDefaultState(this.stateManager.getDefaultState()
 			.with(Properties.HORIZONTAL_FACING, Direction.NORTH)
 			.with(POINTING, CursedPointingDirection.SIDEWAYS));
