@@ -2,7 +2,6 @@ package link.infra.funkyforcefields.blocks;
 
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder;
 import link.infra.funkyforcefields.FunkyForcefields;
-import link.infra.funkyforcefields.regions.ForcefieldFluids;
 import link.infra.funkyforcefields.regions.ForcefieldRegionHolder;
 import link.infra.funkyforcefields.regions.ForcefieldRegionLine;
 import link.infra.funkyforcefields.regions.ForcefieldRegionManager;
@@ -34,14 +33,14 @@ import java.util.Set;
 
 public class PlasmaEjectorBlockEntity extends BlockEntity implements ForcefieldRegionHolder, Tickable, BlockComponentProvider, PropertyDelegateHolder, NameableContainerFactory, BlockEntityClientSerializable {
 	private ForcefieldRegionLine region;
-	private boolean queueBlockPlace = false;
+	private boolean queuedBlockUpdate = false;
 
 	public PlasmaEjectorBlockEntity() {
 		super(FunkyForcefields.PLASMA_EJECTOR_BLOCK_ENTITY);
 	}
 
 	protected void placeBlocks() {
-		queueBlockPlace = true;
+		queuedBlockUpdate = true;
 	}
 
 	@Override
@@ -54,36 +53,82 @@ public class PlasmaEjectorBlockEntity extends BlockEntity implements ForcefieldR
 				if (region != null) {
 					region.cleanup(getWorld(), manager);
 				}
+				region = null;
 			}
+		}
+	}
+
+	private static final float REQUIRED_PRESSURE = 2000;
+	private static final float PRESSURE_PER_TICK_PER_BLOCK = 10;
+	private static final float REQUIRED_TEMP = 700;
+
+	private void updateRegion(boolean newState, boolean doBlockUpdates) {
+		ForcefieldRegionManager manager = ForcefieldRegionManager.get(getWorld());
+		if (manager != null) {
+			if (region != null) {
+				manager.removeRegion(this);
+				region.cleanup(getWorld(), manager);
+				region = null;
+				if (newState) {
+					doBlockUpdates = true;
+				}
+			}
+		}
+
+		if (newState && fluidContainerComponent.getContainedFluid() != null) {
+			if (getCachedState().getBlock() instanceof PlasmaEjectorVertical) {
+				switch (getCachedState().get(PlasmaEjectorVertical.POINTING)) {
+					case UP:
+						region = new ForcefieldRegionLine(pos, length, Direction.UP, getCachedState().get(PlasmaEjectorVertical.FACING), fluidContainerComponent.getContainedFluid());
+						break;
+					case DOWN:
+						region = new ForcefieldRegionLine(pos, length, Direction.DOWN, getCachedState().get(PlasmaEjectorVertical.FACING), fluidContainerComponent.getContainedFluid());
+						break;
+					case SIDEWAYS:
+						region = new ForcefieldRegionLine(pos, length, getCachedState().get(PlasmaEjectorVertical.FACING), getCachedState().get(PlasmaEjectorVertical.FACING), fluidContainerComponent.getContainedFluid());
+				}
+			} else {
+				region = new ForcefieldRegionLine(pos, length, getCachedState().get(PlasmaEjectorHorizontal.FACING), Direction.UP, fluidContainerComponent.getContainedFluid());
+			}
+			registerRegion(region, world);
+		}
+
+		if (doBlockUpdates && region != null) {
+			region.placeBlocks(world);
+		}
+	}
+
+	private boolean isFluidContainerValid() {
+		if (fluidContainerComponent.getContainedFluid() != null) {
+			if (fluidContainerComponent.getTemperature() >= REQUIRED_TEMP) {
+				return fluidContainerComponent.getPressure() >= REQUIRED_PRESSURE;
+			}
+		}
+		return false;
+	}
+
+	private void tickFluidMagic() {
+		if (isFluidContainerValid()) {
+			fluidContainerComponent.setPressure(fluidContainerComponent.getPressure() - (PRESSURE_PER_TICK_PER_BLOCK * length));
+			if (region == null) {
+				updateRegion(true, true);
+			} else if (region.getForcefieldFluid() != fluidContainerComponent.getContainedFluid()) {
+				updateRegion(true, true);
+			} else if (queuedBlockUpdate) {
+				region.placeBlocks(world);
+			}
+			queuedBlockUpdate = false;
+			return;
+		}
+
+		if (region != null) {
+			updateRegion(false, true);
 		}
 	}
 
 	@Override
 	public void tick() {
 		if (world != null && !world.isClient) {
-			if (region == null) {
-				if (getCachedState().getBlock() instanceof PlasmaEjectorVertical) {
-					// TODO: fluid system, length
-					switch (getCachedState().get(PlasmaEjectorVertical.POINTING)) {
-						case UP:
-							region = new ForcefieldRegionLine(pos, 10, Direction.UP, getCachedState().get(PlasmaEjectorVertical.FACING), ForcefieldFluids.GLASS);
-							break;
-						case DOWN:
-							region = new ForcefieldRegionLine(pos, 10, Direction.DOWN, getCachedState().get(PlasmaEjectorVertical.FACING), ForcefieldFluids.GLASS);
-							break;
-						case SIDEWAYS:
-							region = new ForcefieldRegionLine(pos, 10, getCachedState().get(PlasmaEjectorVertical.FACING), getCachedState().get(PlasmaEjectorVertical.FACING), ForcefieldFluids.GLASS);
-					}
-				} else {
-					region = new ForcefieldRegionLine(pos, 10, getCachedState().get(PlasmaEjectorHorizontal.FACING), Direction.UP, ForcefieldFluids.GLASS);
-				}
-				registerRegion(region, world);
-			}
-
-			if (queueBlockPlace) {
-				region.placeBlocks(world);
-				queueBlockPlace = false;
-			}
 			// TODO: cache component connection?
 			Direction dir = null;
 			if (getCachedState().getBlock() instanceof PlasmaEjectorVertical) {
@@ -107,6 +152,8 @@ public class PlasmaEjectorBlockEntity extends BlockEntity implements ForcefieldR
 			} else {
 				fluidContainerComponent.tick();
 			}
+
+			tickFluidMagic();
 		}
 	}
 
@@ -214,6 +261,7 @@ public class PlasmaEjectorBlockEntity extends BlockEntity implements ForcefieldR
 	public void markDirty() {
 		super.markDirty();
 		if (world != null && !world.isClient()) {
+			updateRegion(isFluidContainerValid(), true);
 			sync();
 		}
 	}
