@@ -1,7 +1,9 @@
 {
 	"itemGroup.funkyforcefields.main": "Funky Forcefields",
+	"block.funkyforcefields.plasma_ejector": "Plasma Ejector",
 	"block.funkyforcefields.plasma_ejector_vertical": "Plasma Ejector (Vertical)",
 	"block.funkyforcefields.plasma_ejector_horizontal": "Plasma Ejector (Horizontal)",
+	"block.funkyforcefields.plasma_ejector.length": "Length",
 	"block.funkyforcefields.liquid_input_hatch": "Liquid Input Hatch",
 	"block.funkyforcefields.plasma_projector": "Plasma Projector",
 	"block.funkyforcefields.pipe": "Fluid Pipe",

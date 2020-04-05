@@ -15,17 +15,23 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
+import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
+import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
+import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.container.BlockContext;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 
 public class FunkyForcefields implements ModInitializer, ClientModInitializer {
@@ -54,6 +60,8 @@ public class FunkyForcefields implements ModInitializer, ClientModInitializer {
 	public static final Block PLASMA_PROJECTOR = new PlasmaProjectorBlock(FabricBlockSettings.of(Material.METAL).build());
 	public static BlockEntityType<PlasmaProjectorBlockEntity> PLASMA_PROJECTOR_BLOCK_ENTITY;
 
+	public static final Identifier PLASMA_EJECTOR_CONFIG_PACKET = new Identifier(MODID, "plasma_ejector");
+
 	@Override
 	public void onInitialize() {
 		Registry.register(Registry.REGISTRIES, new Identifier(MODID, "forcefield_type"), ForcefieldFluid.REGISTRY);
@@ -72,6 +80,9 @@ public class FunkyForcefields implements ModInitializer, ClientModInitializer {
 		Registry.register(Registry.BLOCK, new Identifier(MODID, "plasma_ejector_horizontal"), PLASMA_EJECTOR_HORIZONTAL);
 		Registry.register(Registry.ITEM, new Identifier(MODID, "plasma_ejector_horizontal"),
 			new BlockItem(PLASMA_EJECTOR_HORIZONTAL, new Item.Settings().group(ITEM_GROUP)));
+
+		ContainerProviderRegistry.INSTANCE.registerFactory(new Identifier(MODID, "plasma_ejector"), (syncId, id, player, buf) ->
+			new PlasmaEjectorController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())));
 
 		AttackBlockCallback.EVENT.register((playerEntity, world, hand, blockPos, direction) -> {
 			BlockState state = world.getBlockState(blockPos);
@@ -101,6 +112,20 @@ public class FunkyForcefields implements ModInitializer, ClientModInitializer {
 			new BlockItem(PLASMA_PROJECTOR, new Item.Settings().group(ITEM_GROUP)));
 		PLASMA_PROJECTOR_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(MODID, "plasma_projector"),
 			BlockEntityType.Builder.create(PlasmaProjectorBlockEntity::new, PLASMA_PROJECTOR).build(null));
+
+		ServerSidePacketRegistry.INSTANCE.register(PLASMA_EJECTOR_CONFIG_PACKET, (packetContext, packetByteBuf) -> {
+			BlockPos pos = packetByteBuf.readBlockPos();
+				int lengthUpdate = packetByteBuf.readInt();
+			packetContext.getTaskQueue().execute(() -> {
+				if (packetContext.getPlayer().world.canSetBlock(pos)) {
+					BlockEntity be = packetContext.getPlayer().world.getBlockEntity(pos);
+					if (be instanceof PlasmaEjectorBlockEntity) {
+						((PlasmaEjectorBlockEntity) be).length = lengthUpdate;
+						be.markDirty();
+					}
+				}
+			});
+		});
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -108,5 +133,8 @@ public class FunkyForcefields implements ModInitializer, ClientModInitializer {
 	public void onInitializeClient() {
 		ForcefieldBlocks.initClient();
 		BlockEntityRendererRegistry.INSTANCE.register(PLASMA_PROJECTOR_BLOCK_ENTITY, PlasmaProjectorBlockEntityRenderer::new);
+
+		ScreenProviderRegistry.INSTANCE.registerFactory(new Identifier(MODID, "plasma_ejector"), (syncId, identifier, player, buf) -> new PlasmaEjectorScreen(
+			new PlasmaEjectorController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())), player));
 	}
 }

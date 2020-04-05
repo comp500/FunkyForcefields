@@ -1,20 +1,27 @@
 package link.infra.funkyforcefields.blocks;
 
+import link.infra.funkyforcefields.FunkyForcefields;
 import link.infra.funkyforcefields.regions.ForcefieldRegion;
 import link.infra.funkyforcefields.regions.ForcefieldRegionManager;
 import nerdhub.cardinal.components.api.ComponentType;
 import nerdhub.cardinal.components.api.component.BlockComponentProvider;
 import nerdhub.cardinal.components.api.component.Component;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
+import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.EntityContext;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.BooleanBiFunction;
+import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -127,5 +134,18 @@ public class PlasmaEjectorHorizontal extends HorizontalFacingBlock implements Bl
 			return ((PlasmaEjectorBlockEntity) be).getComponentTypes(blockView, blockPos, direction);
 		}
 		return Collections.emptySet();
+	}
+
+	@Override
+	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+		if (world.isClient) return ActionResult.PASS;
+
+		BlockEntity be = world.getBlockEntity(pos);
+		if (be instanceof PlasmaEjectorBlockEntity) {
+			ContainerProviderRegistry.INSTANCE.openContainer(new Identifier(FunkyForcefields.MODID, "plasma_ejector"),
+				player, (packetByteBuf -> packetByteBuf.writeBlockPos(pos)));
+		}
+
+		return ActionResult.SUCCESS;
 	}
 }

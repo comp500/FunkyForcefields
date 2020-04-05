@@ -40,6 +40,9 @@ dependencies {
 	
 	// Nullability Annotations
 	implementation "com.google.code.findbugs:jsr305:${project.findbugs_version}"
+
+	modImplementation "io.github.cottonmc:LibGui:${libgui_version}"
+	include "io.github.cottonmc:LibGui:${libgui_version}"
 }
 
 processResources {
