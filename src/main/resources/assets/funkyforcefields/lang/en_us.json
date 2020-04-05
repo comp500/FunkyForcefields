@@ -6,7 +6,7 @@
 	"block.funkyforcefields.plasma_ejector.length": "Length",
 	"block.funkyforcefields.liquid_input_hatch": "Liquid Input Hatch",
 	"block.funkyforcefields.plasma_projector": "Plasma Projector",
-	"block.funkyforcefields.pipe": "Fluid Pipe",
+	"block.funkyforcefields.pipe": "Fluid Pipe (fire under to heat up!!!)",
 	"item.funkyforcefields.gauge": "Gauge",
 	"item.funkyforcefields.gauge.north": "North",
 	"item.funkyforcefields.gauge.east": "East",
