@@ -1,0 +1,7 @@
+{
+	"parent": "funkyforcefields:block/forcefield_horizontal",
+	"textures": {
+		"main": "funkyforcefields:block/funky_goo",
+		"particle": "funkyforcefields:block/funky_goo"
+	}
+}

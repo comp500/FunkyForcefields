@@ -1,0 +1,8 @@
+{
+	"variants": {
+		"facing=north": { "model": "funkyforcefields:block/forcefield_funky_goo_vertical" },
+		"facing=east":  { "model": "funkyforcefields:block/forcefield_funky_goo_vertical", "y": 90 },
+		"facing=south": { "model": "funkyforcefields:block/forcefield_funky_goo_vertical", "y": 180 },
+		"facing=west":  { "model": "funkyforcefields:block/forcefield_funky_goo_vertical", "y": 270 }
+	}
+}

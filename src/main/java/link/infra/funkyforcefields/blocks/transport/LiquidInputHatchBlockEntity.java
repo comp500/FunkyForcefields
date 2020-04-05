@@ -51,10 +51,12 @@ public class LiquidInputHatchBlockEntity extends BlockEntity implements BlockCom
 		}
 		// TODO: make event driven?
 		List<ItemEntity> ents = world.getEntities(EntityType.ITEM, new Box(pos), item ->
-			item.getStack() != null && (item.getStack().getItem().equals(Items.WATER_BUCKET) || item.getStack().getItem().equals(Items.LAVA_BUCKET)));
+			item.getStack() != null && (item.getStack().getItem().equals(Items.WATER_BUCKET) || item.getStack().getItem().equals(Items.LAVA_BUCKET) || item.getStack().getItem().equals(Items.ROTTEN_FLESH)));
 		if (ents.size() > 0) {
 			if (ents.get(0).getStack().getItem().equals(Items.WATER_BUCKET)) {
 				return ForcefieldFluids.WATER;
+			} else if (ents.get(0).getStack().getItem().equals(Items.ROTTEN_FLESH)) {
+				return ForcefieldFluids.FUNKY_GOO;
 			} else {
 				return ForcefieldFluids.LAVA;
 			}
@@ -81,11 +83,14 @@ public class LiquidInputHatchBlockEntity extends BlockEntity implements BlockCom
 			}
 		}
 		List<ItemEntity> ents = world.getEntities(EntityType.ITEM, new Box(pos), item ->
-			item.getStack() != null && (item.getStack().getItem().equals(Items.WATER_BUCKET) || item.getStack().getItem().equals(Items.LAVA_BUCKET)));
+			item.getStack() != null && (item.getStack().getItem().equals(Items.WATER_BUCKET) || item.getStack().getItem().equals(Items.LAVA_BUCKET) || item.getStack().getItem().equals(Items.ROTTEN_FLESH)));
 		if (ents.size() > 0) {
 			ItemEntity ent = ents.get(0);
 			if (ent.isAlive()) {
 				ent.kill();
+				if (ent.getStack().getItem().equals(Items.ROTTEN_FLESH)) {
+					return ForcefieldFluids.FUNKY_GOO;
+				}
 				ItemEntity emptyBucket = new ItemEntity(world, ent.getX(), ent.getY(), ent.getZ(), new ItemStack(Items.BUCKET));
 				emptyBucket.setVelocity(new Vec3d(ent.getVelocity().getX(), 1, ent.getVelocity().getZ()));
 				world.spawnEntity(emptyBucket);

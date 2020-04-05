@@ -9,6 +9,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
@@ -141,12 +142,36 @@ public class ForcefieldFluids {
 			return new TranslatableText("block.minecraft.nether_portal");
 		}
 	};
-	// TODO: gooooooo?
+
+	public static final ForcefieldFluid FUNKY_GOO = new ForcefieldFluid() {
+		@Override
+		public boolean allowsEntity(Entity ent) {
+			return ent instanceof PlayerEntity;
+		}
+
+		@Override
+		public void applyCollisionEffect(World world, BlockPos pos, Entity entity) {
+			if (!(entity instanceof PlayerEntity) && !entity.isFireImmune()) {
+				entity.damage(DamageSource.IN_FIRE, 5.0f);
+			}
+		}
+
+		@Override
+		public Identifier getBaseIdentifier() {
+			return new Identifier(FunkyForcefields.MODID, "funky_goo_forcefield");
+		}
+
+		@Override
+		public TranslatableText getFluidName() {
+			return new TranslatableText("block.funkyforcefields.funky_goo");
+		}
+	};
 
 	public static void register() {
 		Registry.register(ForcefieldFluid.REGISTRY, new Identifier(FunkyForcefields.MODID, "water"), WATER);
 		Registry.register(ForcefieldFluid.REGISTRY, new Identifier(FunkyForcefields.MODID, "lava"), LAVA);
 		Registry.register(ForcefieldFluid.REGISTRY, new Identifier(FunkyForcefields.MODID, "glass"), GLASS);
 		Registry.register(ForcefieldFluid.REGISTRY, new Identifier(FunkyForcefields.MODID, "nether_portal"), NETHER_PORTAL);
+		Registry.register(ForcefieldFluid.REGISTRY, new Identifier(FunkyForcefields.MODID, "funky_goo"), FUNKY_GOO);
 	}
 }

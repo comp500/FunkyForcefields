@@ -19,5 +19,6 @@
 	"item.funkyforcefields.gauge.volume": "Volume: ",
 	"item.funkyforcefields.gauge.thermal_diffusivity": "Thermal Diffusivity: ",
 	"item.funkyforcefields.gauge.pressure": "Pressure: ",
-	"item.funkyforcefields.gauge.temperature": "Temperature: "
+	"item.funkyforcefields.gauge.temperature": "Temperature: ",
+	"block.funkyforcefields.funky_goo": "Funky Goo (yeah idk either)"
 }
