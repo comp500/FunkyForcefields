@@ -16,6 +16,3 @@ It is somewhat unconventional and uses fluids to create forcefields, which are e
 - Lava literally just kills everything.
 - Glass is inert, so you can make an unbreakable barrier (or a bridge, when I get round to adding redstone functionality)
 - Funky Goo kills mobs but allows players to pass through freely.
-
-## Support
-I'm comp500#7396 on [The Fabric Project](https://fabricmc.net/discuss/) Discord server. I'm also [/u/comp500](https://www.reddit.com/user/comp500/) on reddit and [comp500](https://keybase.io/comp500) on Keybase. DM me or @ me at any time if you have any questions!
