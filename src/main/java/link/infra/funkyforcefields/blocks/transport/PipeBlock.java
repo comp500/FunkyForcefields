@@ -8,19 +8,19 @@ import nerdhub.cardinal.components.api.component.Component;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.EntityContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Property;
-import net.minecraft.util.BooleanBiFunction;
+import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.WorldAccess;
 
 import java.util.Collections;
 import java.util.Set;
@@ -158,7 +158,7 @@ public class PipeBlock extends Block implements BlockEntityProvider, BlockCompon
 		Block.createCuboidShape(3, 0, 3, 13, 1, 13));
 
 	@Override
-	public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, EntityContext context) {
+	public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
 		VoxelShape shape = Block.createCuboidShape(4, 4, 4, 12, 12, 12);
 		shape = NORTH_SHAPE.get(state, shape);
 		shape = EAST_SHAPE.get(state, shape);
@@ -190,7 +190,7 @@ public class PipeBlock extends Block implements BlockEntityProvider, BlockCompon
 	}
 
 	@Override
-	public BlockState getStateForNeighborUpdate(BlockState state, Direction facing, BlockState neighborState, IWorld world, BlockPos pos, BlockPos neighborPos) {
+	public BlockState getStateForNeighborUpdate(BlockState state, Direction facing, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
 		// TODO: check fluid, check for component rather than side solid
 		if (neighborState.getBlock() instanceof PipeBlock) {
 			return state.with(directionToProperty(facing), PipeConnection.CONNECTED);

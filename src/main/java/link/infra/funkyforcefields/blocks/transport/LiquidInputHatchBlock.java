@@ -6,9 +6,9 @@ import nerdhub.cardinal.components.api.component.Component;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.EntityContext;
-import net.minecraft.util.BooleanBiFunction;
+import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -33,12 +33,12 @@ public class LiquidInputHatchBlock extends Block implements BlockEntityProvider,
 	).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get();
 
 	@Override
-	public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, EntityContext context) {
+	public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
 		return SHAPE;
 	}
 
 	@Override
-	public VoxelShape getRayTraceShape(BlockState state, BlockView view, BlockPos pos) {
+	public VoxelShape getRaycastShape(BlockState state, BlockView view, BlockPos pos) {
 		return VoxelShapes.fullCube();
 	}
 

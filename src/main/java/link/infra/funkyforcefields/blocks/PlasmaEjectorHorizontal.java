@@ -6,11 +6,10 @@ import link.infra.funkyforcefields.regions.ForcefieldRegionManager;
 import nerdhub.cardinal.components.api.ComponentType;
 import nerdhub.cardinal.components.api.component.BlockComponentProvider;
 import nerdhub.cardinal.components.api.component.Component;
-import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
+import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.EntityContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
@@ -19,9 +18,9 @@ import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.BooleanBiFunction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -35,7 +34,7 @@ import java.util.Set;
 
 public class PlasmaEjectorHorizontal extends HorizontalFacingBlock implements BlockEntityProvider, BlockComponentProvider {
 	public PlasmaEjectorHorizontal() {
-		super(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL).build());
+		super(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL));
 		setDefaultState(this.stateManager.getDefaultState()
 			.with(Properties.HORIZONTAL_FACING, Direction.NORTH));
 	}
@@ -63,7 +62,7 @@ public class PlasmaEjectorHorizontal extends HorizontalFacingBlock implements Bl
 		Block.createCuboidShape(0, 12, 0, 3, 16, 16), BooleanBiFunction.OR);
 
 	@Override
-	public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, EntityContext context) {
+	public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
 		switch (state.get(FACING)) {
 			case NORTH:
 				return NORTH;

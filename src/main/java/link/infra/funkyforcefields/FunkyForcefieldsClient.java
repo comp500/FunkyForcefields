@@ -9,7 +9,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
-import net.minecraft.container.BlockContext;
+import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.util.Identifier;
 
 public class FunkyForcefieldsClient implements ClientModInitializer {
@@ -20,6 +20,6 @@ public class FunkyForcefieldsClient implements ClientModInitializer {
 		BlockEntityRendererRegistry.INSTANCE.register(FunkyForcefields.PLASMA_PROJECTOR_BLOCK_ENTITY, PlasmaProjectorBlockEntityRenderer::new);
 
 		ScreenProviderRegistry.INSTANCE.registerFactory(new Identifier(FunkyForcefields.MODID, "plasma_ejector"), (syncId, identifier, player, buf) -> new PlasmaEjectorScreen(
-			new PlasmaEjectorController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())), player));
+			new PlasmaEjectorController(syncId, player.inventory, ScreenHandlerContext.create(player.world, buf.readBlockPos())), player));
 	}
 }

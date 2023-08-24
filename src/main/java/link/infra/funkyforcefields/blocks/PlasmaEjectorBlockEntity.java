@@ -13,13 +13,13 @@ import nerdhub.cardinal.components.api.component.Component;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.container.BlockContext;
-import net.minecraft.container.Container;
-import net.minecraft.container.NameableContainerFactory;
-import net.minecraft.container.PropertyDelegate;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.screen.NamedScreenHandlerFactory;
+import net.minecraft.screen.PropertyDelegate;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Tickable;
@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.Set;
 
-public class PlasmaEjectorBlockEntity extends BlockEntity implements ForcefieldRegionHolder, Tickable, BlockComponentProvider, PropertyDelegateHolder, NameableContainerFactory, BlockEntityClientSerializable {
+public class PlasmaEjectorBlockEntity extends BlockEntity implements ForcefieldRegionHolder, Tickable, BlockComponentProvider, PropertyDelegateHolder, NamedScreenHandlerFactory, BlockEntityClientSerializable {
 	private ForcefieldRegionLine region;
 	private boolean queuedBlockUpdate = false;
 
@@ -164,15 +164,15 @@ public class PlasmaEjectorBlockEntity extends BlockEntity implements ForcefieldR
 	private final FluidContainerComponentImpl fluidContainerComponent = new FluidContainerComponentImpl(0, 0.3f);
 
 	@Override
-	public void fromTag(CompoundTag tag) {
-		super.fromTag(tag);
+	public void fromTag(BlockState state, NbtCompound tag) {
+		super.fromTag(state, tag);
 		fluidContainerComponent.fromTag(tag);
 		length = tag.getInt("length");
 	}
 
 	@Override
-	public CompoundTag toTag(CompoundTag tag) {
-		tag = super.toTag(tag);
+	public NbtCompound writeNbt(NbtCompound tag) {
+		tag = super.writeNbt(tag);
 		tag = fluidContainerComponent.toTag(tag);
 		tag.putInt("length", length);
 		return tag;
@@ -246,17 +246,17 @@ public class PlasmaEjectorBlockEntity extends BlockEntity implements ForcefieldR
 
 	@Nullable
 	@Override
-	public Container createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-		return new PlasmaEjectorController(syncId, inv, BlockContext.create(world, pos));
+	public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+		return new PlasmaEjectorController(syncId, inv, ScreenHandlerContext.create(world, pos));
 	}
 
 	@Override
-	public void fromClientTag(CompoundTag compoundTag) {
+	public void fromClientTag(NbtCompound compoundTag) {
 		length = compoundTag.getInt("length");
 	}
 
 	@Override
-	public CompoundTag toClientTag(CompoundTag compoundTag) {
+	public NbtCompound toClientTag(NbtCompound compoundTag) {
 		compoundTag.putInt("length", length);
 		return compoundTag;
 	}

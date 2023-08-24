@@ -9,8 +9,8 @@ import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Vec3f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,10 +33,10 @@ public class PlasmaProjectorBlockEntityRenderer extends BlockEntityRenderer<Plas
 		matrices.translate(0.5f, 0.5f, 0.5f);
 		matrices.scale(0.5f, 0.5f, 0.5f);
 		matrices.scale(10f, 10f, 10f);
-		matrices.multiply(Vector3f.NEGATIVE_X.getDegreesQuaternion(90));
+		matrices.multiply(Vec3f.NEGATIVE_X.getDegreesQuaternion(90));
 
-		MinecraftClient.getInstance().getTextureManager().bindTexture(SpriteAtlasTexture.BLOCK_ATLAS_TEX);
-		Sprite sprite = MinecraftClient.getInstance().getSpriteAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEX).apply(new Identifier("minecraft:block/glass"));
+		MinecraftClient.getInstance().getTextureManager().bindTexture(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE);
+		Sprite sprite = MinecraftClient.getInstance().getSpriteAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE).apply(new Identifier("minecraft:block/glass"));
 
 		VertexConsumer consumer = vertexConsumers.getBuffer(RenderLayer.getCutout());
 
@@ -49,9 +49,9 @@ public class PlasmaProjectorBlockEntityRenderer extends BlockEntityRenderer<Plas
 		//calcVertices(200, 100);
 		MatrixStack.Entry entry = matrices.peek();
 		for (int i = 0; i < vertices.size(); i++) {
-			Vector3f vertex = vertices.get(i);
-			Vector3f normal = normals.get(i);
-			Vector3f uv = uvs.get(i);
+			Vec3f vertex = vertices.get(i);
+			Vec3f normal = normals.get(i);
+			Vec3f uv = uvs.get(i);
 			consumer.vertex(entry.getModel(), vertex.getX(), vertex.getY(), vertex.getZ())
 				.color(255, 255, 255, 255)
 				//.texture(uv.getX(), uv.getY())
@@ -65,9 +65,9 @@ public class PlasmaProjectorBlockEntityRenderer extends BlockEntityRenderer<Plas
 		entry = matrices.peek();
 		for (int i = 0; i < vertices.size(); i+= 4) {
 			for (int j = 3; j > -1; j--) {
-				Vector3f vertex = vertices.get(i+j);
-				Vector3f normal = normals.get(i+j);
-				Vector3f uv = uvs.get(i+j);
+				Vec3f vertex = vertices.get(i+j);
+				Vec3f normal = normals.get(i+j);
+				Vec3f uv = uvs.get(i+j);
 				consumer.vertex(entry.getModel(), vertex.getX(), vertex.getY(), vertex.getZ())
 					.color(255, 255, 255, 255)
 					//.texture(uv.getX(), uv.getY())
@@ -83,9 +83,9 @@ public class PlasmaProjectorBlockEntityRenderer extends BlockEntityRenderer<Plas
 		matrices.pop();
 	}
 
-	private static List<Vector3f> vertices = new ArrayList<>();
-	private static List<Vector3f> normals = new ArrayList<>();
-	private static List<Vector3f> uvs = new ArrayList<>();
+	private static List<Vec3f> vertices = new ArrayList<>();
+	private static List<Vec3f> normals = new ArrayList<>();
+	private static List<Vec3f> uvs = new ArrayList<>();
 
 	private static void calcVertices(int sectorCount, int stackCount) {
 		vertices.clear();
@@ -105,7 +105,7 @@ public class PlasmaProjectorBlockEntityRenderer extends BlockEntityRenderer<Plas
 			for (int j = 0; j <= sectorCount - 1; j++) {
 				float sectorAngle = j * sectorStep;
 
-				Vector3f vertex = new Vector3f(
+				Vec3f vertex = new Vec3f(
 					xy * (float)Math.cos(sectorAngle),
 					xy * (float)Math.sin(sectorAngle),
 					z
@@ -113,10 +113,10 @@ public class PlasmaProjectorBlockEntityRenderer extends BlockEntityRenderer<Plas
 				vertices.add(vertex);
 				// TODO: normals == vertices?
 				normals.add(vertex);
-				//uvs.add(new Vector3f((float)j / sectorCount, (float)i / stackCount, 0));
-				uvs.add(new Vector3f(0, 0, 0));
+				//uvs.add(new Vec3f((float)j / sectorCount, (float)i / stackCount, 0));
+				uvs.add(new Vec3f(0, 0, 0));
 
-				Vector3f vertex2 = new Vector3f(
+				Vec3f vertex2 = new Vec3f(
 					xy * (float)Math.cos(sectorAngle + sectorStep),
 					xy * (float)Math.sin(sectorAngle + sectorStep),
 					z
@@ -124,10 +124,10 @@ public class PlasmaProjectorBlockEntityRenderer extends BlockEntityRenderer<Plas
 				vertices.add(vertex2);
 				// TODO: normals == vertices?
 				normals.add(vertex2);
-				//uvs.add(new Vector3f((float)(j + 1) / sectorCount, (float)i / stackCount, 0));
-				uvs.add(new Vector3f(1, 0, 0));
+				//uvs.add(new Vec3f((float)(j + 1) / sectorCount, (float)i / stackCount, 0));
+				uvs.add(new Vec3f(1, 0, 0));
 
-				Vector3f vertex3 = new Vector3f(
+				Vec3f vertex3 = new Vec3f(
 					xy2 * (float)Math.cos(sectorAngle + sectorStep),
 					xy2 * (float)Math.sin(sectorAngle + sectorStep),
 					z2
@@ -136,10 +136,10 @@ public class PlasmaProjectorBlockEntityRenderer extends BlockEntityRenderer<Plas
 				// TODO: normals == vertices?
 				normals.add(vertex3);
 
-				//uvs.add(new Vector3f((float)(j + 1) / sectorCount, (float)(i + 1) / stackCount, 0));
-				uvs.add(new Vector3f(1, 1, 0));
+				//uvs.add(new Vec3f((float)(j + 1) / sectorCount, (float)(i + 1) / stackCount, 0));
+				uvs.add(new Vec3f(1, 1, 0));
 
-				Vector3f vertex4 = new Vector3f(
+				Vec3f vertex4 = new Vec3f(
 					xy2 * (float)Math.cos(sectorAngle),
 					xy2 * (float)Math.sin(sectorAngle),
 					z2
@@ -148,8 +148,8 @@ public class PlasmaProjectorBlockEntityRenderer extends BlockEntityRenderer<Plas
 				// TODO: normals == vertices?
 				normals.add(vertex4);
 
-				//uvs.add(new Vector3f((float)j / sectorCount, (float)(i + 1) / stackCount, 0));
-				uvs.add(new Vector3f(0, 1, 0));
+				//uvs.add(new Vec3f((float)j / sectorCount, (float)(i + 1) / stackCount, 0));
+				uvs.add(new Vec3f(0, 1, 0));
 			}
 		}
 	}

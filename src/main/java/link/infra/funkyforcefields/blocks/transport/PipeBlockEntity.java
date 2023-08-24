@@ -7,9 +7,10 @@ import link.infra.funkyforcefields.transport.FluidContainerComponentImpl;
 import nerdhub.cardinal.components.api.ComponentType;
 import nerdhub.cardinal.components.api.component.BlockComponentProvider;
 import nerdhub.cardinal.components.api.component.Component;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.FireBlock;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -28,15 +29,15 @@ public class PipeBlockEntity extends BlockEntity implements Tickable, BlockCompo
 	private final FluidContainerComponentImpl fluidContainerComponent = new FluidContainerComponentImpl(6, 0.2f);
 
 	@Override
-	public void fromTag(CompoundTag tag) {
-		super.fromTag(tag);
+	public void fromTag(BlockState state, NbtCompound tag) {
+		super.fromTag(state, tag);
 		fluidContainerComponent.fromTag(tag);
 	}
 
 	@Override
-	public CompoundTag toTag(CompoundTag tag) {
-		tag = super.toTag(tag);
-		return fluidContainerComponent.toTag(tag);
+	public NbtCompound writeNbt(NbtCompound nbt) {
+		nbt = super.writeNbt(nbt);
+		return fluidContainerComponent.toTag(nbt);
 	}
 
 	@Override
@@ -99,12 +100,12 @@ public class PipeBlockEntity extends BlockEntity implements Tickable, BlockCompo
 		}
 
 		@Override
-		public void fromTag(CompoundTag tag) {
+		public void fromTag(NbtCompound tag) {
 			throw new RuntimeException("FireFluidContainerComponent is fake!!!");
 		}
 
 		@Override
-		public CompoundTag toTag(CompoundTag tag) {
+		public NbtCompound toTag(NbtCompound tag) {
 			throw new RuntimeException("FireFluidContainerComponent is fake!!!");
 		}
 	}
