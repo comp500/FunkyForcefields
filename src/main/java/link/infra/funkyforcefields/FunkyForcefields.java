@@ -6,24 +6,23 @@ import link.infra.funkyforcefields.blocks.transport.LiquidInputHatchBlockEntity;
 import link.infra.funkyforcefields.blocks.transport.PipeBlock;
 import link.infra.funkyforcefields.blocks.transport.PipeBlockEntity;
 import link.infra.funkyforcefields.items.GaugeItem;
-import link.infra.funkyforcefields.regions.ForcefieldFluid;
 import link.infra.funkyforcefields.regions.ForcefieldFluids;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
-import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.container.BlockContext;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
@@ -39,7 +38,7 @@ public class FunkyForcefields implements ModInitializer {
 
 	public static BlockEntityType<PlasmaEjectorBlockEntity> PLASMA_EJECTOR_BLOCK_ENTITY;
 
-	public static final Block PIPE = new PipeBlock(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL).build());
+	public static final Block PIPE = new PipeBlock(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL));
 	public static BlockEntityType<PipeBlockEntity> PIPE_BLOCK_ENTITY;
 
 	public static final ItemGroup ITEM_GROUP = FabricItemGroupBuilder.build(
@@ -49,17 +48,16 @@ public class FunkyForcefields implements ModInitializer {
 
 	public static final Item GAUGE = new GaugeItem(new Item.Settings().group(ITEM_GROUP));
 
-	public static final Block LIQUID_INPUT_HATCH = new LiquidInputHatchBlock(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL).build());
+	public static final Block LIQUID_INPUT_HATCH = new LiquidInputHatchBlock(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL));
 	public static BlockEntityType<LiquidInputHatchBlockEntity> LIQUID_INPUT_HATCH_BLOCK_ENTITY;
 
-	public static final Block PLASMA_PROJECTOR = new PlasmaProjectorBlock(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL).build());
+	public static final Block PLASMA_PROJECTOR = new PlasmaProjectorBlock(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL));
 	public static BlockEntityType<PlasmaProjectorBlockEntity> PLASMA_PROJECTOR_BLOCK_ENTITY;
 
 	public static final Identifier PLASMA_EJECTOR_CONFIG_PACKET = new Identifier(MODID, "plasma_ejector");
 
 	@Override
 	public void onInitialize() {
-		Registry.register(Registry.REGISTRIES, new Identifier(MODID, "forcefield_type"), ForcefieldFluid.REGISTRY);
 		ForcefieldFluids.register();
 		ForcefieldBlocks.registerStandardBlockTypes();
 
@@ -77,7 +75,7 @@ public class FunkyForcefields implements ModInitializer {
 			new BlockItem(PLASMA_EJECTOR_HORIZONTAL, new Item.Settings().group(ITEM_GROUP)));
 
 		ContainerProviderRegistry.INSTANCE.registerFactory(new Identifier(MODID, "plasma_ejector"), (syncId, id, player, buf) ->
-			new PlasmaEjectorController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())));
+			new PlasmaEjectorController(syncId, player.inventory, ScreenHandlerContext.create(player.world, buf.readBlockPos())));
 
 		AttackBlockCallback.EVENT.register((playerEntity, world, hand, blockPos, direction) -> {
 			BlockState state = world.getBlockState(blockPos);
@@ -108,12 +106,12 @@ public class FunkyForcefields implements ModInitializer {
 		PLASMA_PROJECTOR_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(MODID, "plasma_projector"),
 			BlockEntityType.Builder.create(PlasmaProjectorBlockEntity::new, PLASMA_PROJECTOR).build(null));
 
-		ServerSidePacketRegistry.INSTANCE.register(PLASMA_EJECTOR_CONFIG_PACKET, (packetContext, packetByteBuf) -> {
+		ServerPlayNetworking.registerGlobalReceiver(PLASMA_EJECTOR_CONFIG_PACKET, (server, player, handler, packetByteBuf, responseSender) -> {
 			BlockPos pos = packetByteBuf.readBlockPos();
 				int lengthUpdate = packetByteBuf.readInt();
-			packetContext.getTaskQueue().execute(() -> {
-				if (packetContext.getPlayer().world.canSetBlock(pos)) {
-					BlockEntity be = packetContext.getPlayer().world.getBlockEntity(pos);
+			server.execute(() -> {
+				if (player.world.canSetBlock(pos)) {
+					BlockEntity be = player.world.getBlockEntity(pos);
 					if (be instanceof PlasmaEjectorBlockEntity) {
 						((PlasmaEjectorBlockEntity) be).length = lengthUpdate;
 						be.markDirty();

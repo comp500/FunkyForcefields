@@ -45,9 +45,9 @@ public class ForcefieldFluids {
 			Box box = shape.getBoundingBox();
 			for (int i = 0; i < 10; i++) {
 				world.addImportantParticle(ParticleTypes.CLOUD,
-					pos.getX() + box.x1 + (box.getXLength() * random.nextFloat()),
-					pos.getY() + box.y1 + (box.getYLength() * random.nextFloat()),
-					pos.getZ() + box.z1 + (box.getZLength() * random.nextFloat()),
+					pos.getX() + box.minX + (box.getXLength() * random.nextFloat()),
+					pos.getY() + box.minY + (box.getYLength() * random.nextFloat()),
+					pos.getZ() + box.minZ + (box.getZLength() * random.nextFloat()),
 					0, 0, 0);
 			}
 		}

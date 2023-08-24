@@ -9,7 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
@@ -39,21 +39,21 @@ public class GaugeItem extends Item {
 	private static void printInformation(PlayerEntity player, FluidContainerComponent component) {
 		ForcefieldFluid fluid = component.getContainedFluid();
 		if (fluid == null) {
-			player.sendMessage(new TranslatableText("item.funkyforcefields.gauge.fluidname").append(new TranslatableText("item.funkyforcefields.gauge.empty")));
+			player.sendMessage(new TranslatableText("item.funkyforcefields.gauge.fluidname").append(new TranslatableText("item.funkyforcefields.gauge.empty")), false);
 		} else {
-			player.sendMessage(new TranslatableText("item.funkyforcefields.gauge.fluidname").append(fluid.getFluidName()));
+			player.sendMessage(new TranslatableText("item.funkyforcefields.gauge.fluidname").append(fluid.getFluidName()), false);
 		}
-		player.sendMessage(new TranslatableText("item.funkyforcefields.gauge.volume").append(Float.toString(component.getContainerVolume())));
-		player.sendMessage(new TranslatableText("item.funkyforcefields.gauge.thermal_diffusivity").append(Float.toString(component.getThermalDiffusivity())));
-		player.sendMessage(new TranslatableText("item.funkyforcefields.gauge.pressure").append(Float.toString(component.getPressure())));
-		player.sendMessage(new TranslatableText("item.funkyforcefields.gauge.temperature").append(Float.toString(component.getTemperature())));
+		player.sendMessage(new TranslatableText("item.funkyforcefields.gauge.volume").append(Float.toString(component.getContainerVolume())), false);
+		player.sendMessage(new TranslatableText("item.funkyforcefields.gauge.thermal_diffusivity").append(Float.toString(component.getThermalDiffusivity())), false);
+		player.sendMessage(new TranslatableText("item.funkyforcefields.gauge.pressure").append(Float.toString(component.getPressure())), false);
+		player.sendMessage(new TranslatableText("item.funkyforcefields.gauge.temperature").append(Float.toString(component.getTemperature())), false);
 	}
 
 	private static void printDirectionList(PlayerEntity player, List<Direction> directions) {
 		if (directions.size() == 0 || (directions.size() == 1 && directions.get(0) == null)) {
 			return;
 		}
-		Text text = new LiteralText("");
+		MutableText text = new LiteralText("");
 		for (int i = 0; i < directions.size(); i++) {
 			switch (directions.get(i)) {
 				case NORTH:
@@ -81,7 +81,7 @@ public class GaugeItem extends Item {
 				text = text.append(",");
 			}
 		}
-		player.sendMessage(text.append(":"));
+		player.sendMessage(text.append(":"), false);
 	}
 
 	@Override

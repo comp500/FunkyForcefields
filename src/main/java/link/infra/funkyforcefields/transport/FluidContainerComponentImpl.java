@@ -1,7 +1,7 @@
 package link.infra.funkyforcefields.transport;
 
 import link.infra.funkyforcefields.regions.ForcefieldFluid;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 
 import java.util.Objects;
 
@@ -55,7 +55,7 @@ public class FluidContainerComponentImpl implements FluidContainerComponent {
 	}
 
 	@Override
-	public void fromTag(CompoundTag compoundTag) {
+	public void fromTag(NbtCompound compoundTag) {
 		pressure = compoundTag.getFloat("pressure");
 		temperature = compoundTag.getFloat("temperature");
 		if (compoundTag.getInt("containedFluid") != -1) {
@@ -64,7 +64,7 @@ public class FluidContainerComponentImpl implements FluidContainerComponent {
 	}
 
 	@Override
-	public CompoundTag toTag(CompoundTag compoundTag) {
+	public NbtCompound toTag(NbtCompound compoundTag) {
 		compoundTag.putFloat("pressure", pressure);
 		compoundTag.putFloat("temperature", temperature);
 		if (containedFluid != null) {

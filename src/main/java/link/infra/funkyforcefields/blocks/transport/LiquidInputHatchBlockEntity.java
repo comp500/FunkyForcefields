@@ -19,7 +19,7 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -50,7 +50,7 @@ public class LiquidInputHatchBlockEntity extends BlockEntity implements BlockCom
 			return ForcefieldFluids.GLASS;
 		}
 		// TODO: make event driven?
-		List<ItemEntity> ents = world.getEntities(EntityType.ITEM, new Box(pos), item ->
+		List<ItemEntity> ents = world.getEntitiesByType(EntityType.ITEM, new Box(pos), item ->
 			item.getStack() != null && (item.getStack().getItem().equals(Items.WATER_BUCKET) || item.getStack().getItem().equals(Items.LAVA_BUCKET) || item.getStack().getItem().equals(Items.ROTTEN_FLESH)));
 		if (ents.size() > 0) {
 			if (ents.get(0).getStack().getItem().equals(Items.WATER_BUCKET)) {
@@ -82,7 +82,7 @@ public class LiquidInputHatchBlockEntity extends BlockEntity implements BlockCom
 				return null;
 			}
 		}
-		List<ItemEntity> ents = world.getEntities(EntityType.ITEM, new Box(pos), item ->
+		List<ItemEntity> ents = world.getEntitiesByType(EntityType.ITEM, new Box(pos), item ->
 			item.getStack() != null && (item.getStack().getItem().equals(Items.WATER_BUCKET) || item.getStack().getItem().equals(Items.LAVA_BUCKET) || item.getStack().getItem().equals(Items.ROTTEN_FLESH)));
 		if (ents.size() > 0) {
 			ItemEntity ent = ents.get(0);
@@ -141,8 +141,8 @@ public class LiquidInputHatchBlockEntity extends BlockEntity implements BlockCom
 	private final FluidContainerComponentImpl fluidContainerComponent = new FluidContainerComponentImpl(10, 0.2F);
 
 	@Override
-	public void fromTag(CompoundTag tag) {
-		super.fromTag(tag);
+	public void fromTag(BlockState state, NbtCompound tag) {
+		super.fromTag(state, tag);
 		if (tag.getInt("bufferedFluid") != -1) {
 			currentFluid = ForcefieldFluid.REGISTRY.get(tag.getInt("bufferedFluid"));
 		}
@@ -151,8 +151,8 @@ public class LiquidInputHatchBlockEntity extends BlockEntity implements BlockCom
 	}
 
 	@Override
-	public CompoundTag toTag(CompoundTag tag) {
-		tag = super.toTag(tag);
+	public NbtCompound writeNbt(NbtCompound tag) {
+		tag = super.writeNbt(tag);
 		if (currentFluid != null) {
 			tag.putInt("bufferedFluid", ForcefieldFluid.REGISTRY.getRawId(currentFluid));
 		} else {
